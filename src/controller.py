@@ -7,35 +7,52 @@ import model
 moves = {"right": (1,0), "left": (-1,0), "up": (0,-1), "down": (0,1)}
 
 def movePiece(game, direction):
-    if direction == "up":
-        
-    elif direction == "down":
-        
-    elif direction == "left":
-
-    elif direction == "right":
-        
-    else:
+    if direction not in moves.keys():
         raise ValueError("Invalid direction")
+    
+    if validateMove(game, direction) == "stop":
+        return
+    
+    pivot = game.pieces[0]
+    new_poss = [(pivot.position[0] + moves[direction][0], pivot.position[1] + moves[direction][1])]
+    pivot.position = (pivot.position[0] + moves[direction][0], pivot.position[1] + moves[direction][1])
+    for piece in pivot.connections:
+        new_poss.append((piece.position[0] + moves[direction][0], piece.position[1] + moves[direction][1]))
+        piece.position = (piece.position[0] + moves[direction][0], piece.position[1] + moves[direction][1])
+    
+    for piece in game.pieces:
+        if piece.position in new_poss and piece != pivot and piece not in pivot.connections:
+            new_poss.append((piece.position[0] + moves[direction][0], piece.position[1] + moves[direction][1]))
+            piece.position = (piece.position[0] + moves[direction][0], piece.position[1] + moves[direction][1])
+    
+    return
+
 
 
 def validateMove(game, direction):
     pivot = game.pieces[0]
+    return checkMovePiece(pivot, game, direction)
+
+def checkMovePiece(pivot, game, direction): # To implement
+    new_move = (pivot.position[0] + moves[direction][0], pivot.position[1] + moves[direction][1])
+    if(new_move in game.walls):
+        return "stop"
     if not pivot.connections:
         for otherPiece in game.pieces:
-            if (otherPiece not in pivot.connected) and (nearPieces(otherPiece, pivot) != direction):
-                new_move = (pivot.position[0] + moves[direction][0], pivot.position[1] + moves[direction][1])
-                if(new_move not in game.walls):
-                    return "move"
-                else:
+            if (nearPieces(otherPiece, pivot) == direction):
+                result = checkMovePiece(otherPiece, game, direction)
+                if result == "stop":
                     return "stop"
-            elif (otherPiece not in pivot.connected) and (nearPieces(otherPiece, pivot) == direction):
-                a = 0
+        return "move"
     else:
-        a = 0
-
-def checkMovePiece(): # To implement
-    return True
+        for connectedPiece in pivot.connections:
+            for otherPiece in game.pieces:
+                if (otherPiece not in pivot.connections):
+                    if (nearPieces(connectedPiece, otherPiece) == direction):
+                        result = checkMovePiece(otherPiece, game, direction)
+                        if result == "stop":
+                            return "stop"
+        return "move"
 
 def nearPieces(piece1, piece2):
     if piece1.position[0] == piece2.position[0]:
