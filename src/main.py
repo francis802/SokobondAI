@@ -31,6 +31,16 @@ controller.movePiece(game, "right")
 for piece in game.pieces:
     print(piece.position, end=" ")
     print(piece.connections)
+print("-----------------")
+controller.movePiece(game, "down")
+for piece in game.pieces:
+    print(piece.position, end=" ")
+    print(piece.connections)
+print("-----------------")
+controller.movePiece(game, "down")
+for piece in game.pieces:
+    print(piece.position, end=" ")
+    print(piece.connections)
 
 
 # Fonts

@@ -46,30 +46,29 @@ def validateMove(game, direction):
     return checkMovePiece(pivot, game, direction)
 
 def checkMovePiece(pivot, game, direction):
+    if(wallCollision(pivot, game, direction)):
+        return "stop"
+    for otherPiece in game.pieces:
+        if (nearPieces(pivot, otherPiece) == direction and otherPiece not in pivot.connections):
+            print("Other piece: ", otherPiece.position)
+            result = checkMovePiece(otherPiece, game, direction)
+            if result == "stop":
+                return "stop"
+
+    for connectedPiece in pivot.connections:
+        if not connectedPiece.visited:
+            connectedPiece.visited = True
+            result = checkMovePiece(connectedPiece, game, direction)
+            if result == "stop":
+                return "stop"
+    return "move"
+
+def wallCollision(pivot, game, direction):
     new_move = (pivot.position[0] + moves[direction][0], pivot.position[1] + moves[direction][1])
     print("Move: ", new_move)
     if(new_move in game.walls):
-        return "stop"
-    if not pivot.connections:
-        for otherPiece in game.pieces:
-            if (nearPieces(otherPiece, pivot) == direction):
-                result = checkMovePiece(otherPiece, game, direction)
-                if result == "stop":
-                    return "stop"
-        return "move"
-    else:
-        for connectedPiece in pivot.connections:
-            if not connectedPiece.visited:
-                connectedPiece.visited = True
-            else:
-                continue
-            for otherPiece in game.pieces:
-                if (otherPiece not in pivot.connections):
-                    if (nearPieces(connectedPiece, otherPiece) == direction):
-                        result = checkMovePiece(otherPiece, game, direction)
-                        if result == "stop":
-                            return "stop"
-        return "move"
+        return True
+    return False
 
 def initSearch(game):
     for piece in game.pieces:
