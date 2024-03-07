@@ -67,6 +67,7 @@ def wallCollision(pivot, game, direction):
     new_move = (pivot.position[0] + moves[direction][0], pivot.position[1] + moves[direction][1])
     print("Move: ", new_move)
     if(new_move in game.walls):
+        print("Wall collision")
         return True
     return False
 

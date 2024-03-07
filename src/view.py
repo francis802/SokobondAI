@@ -20,15 +20,14 @@ COLORS = {
 }
 
 
-def display(screen, game, gaming, game_name, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started):
+def display(screen, game, game_name, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started):
     screen.fill("grey")
     
     if not game_started:
         drawMenu(screen, game_name, game_name_font, menu_options, menu_options_font, menu_option_selected)
-    elif gaming == True:  
-        drawGame() 
-    else:     
-        initGame(screen, game)
+    else:
+        drawGame(screen, game) 
+   
    
     pygame.display.flip()
 
