@@ -1,5 +1,4 @@
 import pygame
-import main
 
 
 #Colors
@@ -21,32 +20,32 @@ COLORS = {
 }
 
 
-def display():
-    main.screen.fill("grey")
+def display(screen, game, gaming, game_name, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started):
+    screen.fill("grey")
     
-    if not main.game_started:
-        drawMenu()
-    elif main.gaming == True:  
+    if not game_started:
+        drawMenu(screen, game_name, game_name_font, menu_options, menu_options_font, menu_option_selected)
+    elif gaming == True:  
         drawGame() 
     else:     
-        initGame()
+        initGame(screen, game)
    
     pygame.display.flip()
 
 
-def drawMenu():
+def drawMenu(screen, game_name, game_name_font, menu_options, menu_options_font, menu_option_selected):
     # Draw the game name
-    game_name_surface = main.game_name_font.render(main.game_name, True, "black")
-    game_name_pos = game_name_surface.get_rect(midtop=(main.screen.get_width() // 2, main.screen.get_height() // 2 - 200))
-    main.screen.blit(game_name_surface, game_name_pos)
+    game_name_surface = game_name_font.render(game_name, True, "black")
+    game_name_pos = game_name_surface.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 - 200))
+    screen.blit(game_name_surface, game_name_pos)
 
     # Draw Menu
-    for i, option in enumerate(main.menu_options):
-        option = main.menu_options_font.render(option, True, "black")
-        highlighted = option.get_rect(midtop=(main.screen.get_width() // 2, main.screen.get_height() // 2 + i * 50))
-        if i == main.menu_option_selected:
-            pygame.draw.rect(main.screen, "orange", highlighted.inflate(20, 10))  # The rectangle shows in the option selected
-        main.screen.blit(option, highlighted)
+    for i, option in enumerate(menu_options):
+        option = menu_options_font.render(option, True, "black")
+        highlighted = option.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 + i * 50))
+        if i == menu_option_selected:
+            pygame.draw.rect(screen, "orange", highlighted.inflate(20, 10))  # The rectangle shows in the option selected
+        screen.blit(option, highlighted)
 
 
 def initGame(screen, game):

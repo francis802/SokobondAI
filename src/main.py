@@ -62,7 +62,7 @@ while running:
                     controller.movePiece(game, "right")
                     
 
-    view.display(screen, game, game_name, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started)         
+    view.display(screen, game, gaming, game_name, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started)         
     
     dt = clock.tick(60) / 1000
 
