@@ -17,16 +17,20 @@ dt = 0
 game_name = "SOKOBOND"
 
 game = model.Game(levels[1], (1,1))
+print("Wall positions: ", game.walls)
 for piece in game.pieces:
-    print(piece.position)
+    print(piece.position, end=" ")
+    print(piece.connections)
 print("-----------------")
 controller.movePiece(game, "right")
 for piece in game.pieces:
-    print(piece.position)
+    print(piece.position, end=" ")
+    print(piece.connections)
 print("-----------------")
 controller.movePiece(game, "right")
 for piece in game.pieces:
-    print(piece.position)
+    print(piece.position, end=" ")
+    print(piece.connections)
 
 
 # Fonts

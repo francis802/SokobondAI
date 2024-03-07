@@ -12,6 +12,7 @@ class Piece:
             self.position = position
             self.avElectrons = avElectrons
             self.connections = []
+            self.visited = False
     
 
 
