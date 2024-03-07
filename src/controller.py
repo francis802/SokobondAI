@@ -4,7 +4,7 @@ import model
 
 
 # ATENTION: The y axis is turned upside down, so to go up you have to subtract 1, and add 1 to go down!!!
-moves = {"right": (1,0), "left": (-1,0), "up": (0,-1), "down": (0,1)}
+moves = {"right": (0,1), "left": (0,-1), "up": (-1,0), "down": (1,0)}
 
 def movePiece(game, direction):
     if direction not in moves.keys():

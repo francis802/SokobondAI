@@ -16,6 +16,19 @@ dt = 0
 # Game Name
 game_name = "SOKOBOND"
 
+game = model.Game(levels[1], (1,1))
+for piece in game.pieces:
+    print(piece.position)
+print("-----------------")
+controller.movePiece(game, "right")
+for piece in game.pieces:
+    print(piece.position)
+print("-----------------")
+controller.movePiece(game, "right")
+for piece in game.pieces:
+    print(piece.position)
+
+
 # Fonts
 game_name_font = pygame.font.SysFont("Arial", 100)
 menu_options_font = pygame.font.SysFont("Arial", 24)

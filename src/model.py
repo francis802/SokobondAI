@@ -25,10 +25,10 @@ class Game:
 
     def listPieces(self):
         pieces = []
-        for row in self.board:
-            for cell in row:
+        for rowIndex, row in enumerate(self.board):
+            for colIndex, cell in enumerate(row):
                 if cell in atoms:
-                    piece = Piece(cell, (row.index(cell), self.board.index(row)), valenceElectrons[cell])
+                    piece = Piece(cell, (rowIndex, colIndex), valenceElectrons[cell])
                     if piece.position != self.player_pos:
                         pieces.append(piece)
                     else:
