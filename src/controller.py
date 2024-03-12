@@ -23,6 +23,15 @@ def movePiece(game, direction):
     
     newConnections(game)
 
+    for piece in game.pieces:
+        print(piece.atom, end=": ")
+        print(piece.position)
+        print("Connections:", end=" ")
+        print(piece.connections)
+        print("Available Electrons:", end=" ")
+        print(piece.avElectrons)
+        print("-----------------")
+
     return
 
 def newConnections(game):
@@ -37,9 +46,11 @@ def newConnections(game):
 
 def moveAjacentPiece(game, direction, pivot, new_poss):
     for piece in pivot.connections:
-        new_poss.append((piece.position[0] + moves[direction][0], piece.position[1] + moves[direction][1]))
-        piece.position = (piece.position[0] + moves[direction][0], piece.position[1] + moves[direction][1])
-        piece.visited = True
+        if not piece.visited:
+            new_poss.append((piece.position[0] + moves[direction][0], piece.position[1] + moves[direction][1]))
+            piece.position = (piece.position[0] + moves[direction][0], piece.position[1] + moves[direction][1])
+            piece.visited = True
+            moveAjacentPiece(game, direction, piece, new_poss)
     
     for piece in game.pieces:
         if piece.position in new_poss and piece != pivot and piece not in pivot.connections and not piece.visited:
