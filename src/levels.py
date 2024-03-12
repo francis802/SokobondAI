@@ -9,7 +9,7 @@ levels = {
     ['y', 'y', 'y', 'y', 'y', 'y'],
     ['y', 'H', None, None, 'O', 'y'],
     ['y', None, None, None, None, 'y'],
-    ['y', 'O', None, 'y', 'y', 'y'],
+    ['y', None, 'H', 'y', 'y', 'y'],
     ['y', 'y', 'y', 'y', None, None]],
 
     #Level 4 - Loop

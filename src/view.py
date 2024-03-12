@@ -47,25 +47,12 @@ def drawMenu(screen, game_name, game_name_font, menu_options, menu_options_font,
         screen.blit(option, highlighted)
 
 
-def initGame(screen, game):
-    for row_index, row in enumerate(game.board):  
-            for col_index, cell in enumerate(row):
-                if cell:
-                    color = COLORS[cell[:3]]
-                    if color == red:
-                        pygame.draw.circle(screen, color, (col_index * 100 + 50, row_index * 100 + 50), 40)
-                    if color == blue:
-                        pygame.draw.circle(screen, color, (col_index * 100 + 50, row_index * 100 + 50), 40)
-                    else:
-                        pygame.draw.rect(screen, color, (col_index * 100, row_index * 100, 100, 100))
-
-
 def drawGame(screen, game):
         for wall in game.walls:
             pygame.draw.rect(screen, grey, (wall[1] * 100, wall[0] * 100, 100, 100))
 
         for piece in game.pieces:
-            pygame.draw.circle(screen, red, (piece.position[1] * 100 + 50, piece.position[0] * 100 + 50), 40)
+            pygame.draw.circle(screen, COLORS[piece.atom], (piece.position[1] * 100 + 50, piece.position[0] * 100 + 50), 40)
         
 
            

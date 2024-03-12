@@ -7,8 +7,8 @@ atoms = ("H","O")
 
 class Piece:
 
-    def __init__(self, color, position, avElectrons):
-            self.color = color
+    def __init__(self, atom, position, avElectrons):
+            self.atom = atom
             self.position = position
             self.avElectrons = avElectrons
             self.connections = []

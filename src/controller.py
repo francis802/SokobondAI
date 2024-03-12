@@ -21,6 +21,18 @@ def movePiece(game, direction):
     pivot.visited = True
     moveAjacentPiece(game, direction, pivot, new_poss)
     
+    newConnections(game)
+
+    return
+
+def newConnections(game):
+    for piece in game.pieces:
+        for possibleConnection in game.pieces:
+            if piece != possibleConnection and possibleConnection not in piece.connections and (nearPieces(piece, possibleConnection) != "") and piece.avElectrons > 0 and possibleConnection.avElectrons > 0:
+                piece.connections.append(possibleConnection)
+                piece.avElectrons -= 1
+                possibleConnection.connections.append(piece)
+                possibleConnection.avElectrons -= 1
     return
 
 def moveAjacentPiece(game, direction, pivot, new_poss):
