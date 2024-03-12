@@ -16,31 +16,6 @@ dt = 0
 # Game Name
 game_name = "SOKOBOND"
 
-game = model.Game(levels[1]["board"], levels[1]["player_pos"])
-print("Wall positions: ", game.walls)
-for piece in game.pieces:
-    print(piece.position, end=" ")
-    print(piece.connections)
-print("-----------------")
-controller.movePiece(game, "right")
-for piece in game.pieces:
-    print(piece.position, end=" ")
-    print(piece.connections)
-print("-----------------")
-controller.movePiece(game, "right")
-for piece in game.pieces:
-    print(piece.position, end=" ")
-    print(piece.connections)
-print("-----------------")
-controller.movePiece(game, "down")
-for piece in game.pieces:
-    print(piece.position, end=" ")
-    print(piece.connections)
-print("-----------------")
-controller.movePiece(game, "down")
-for piece in game.pieces:
-    print(piece.position, end=" ")
-    print(piece.connections)
 
 
 # Fonts
@@ -89,5 +64,9 @@ while running:
     view.display(screen, game, game_name, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started)         
     
     dt = clock.tick(60) / 1000
+    
+    if (game_started and controller.endGame(game)):
+        running = False
+        break
 
 pygame.quit()

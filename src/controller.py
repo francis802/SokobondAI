@@ -112,5 +112,18 @@ def nearPieces(piece1, piece2):
             return "left"
     return ""
 
+def endGame(game):
+    initSearch(game)
+    dfs(game.pieces[0])
+    for piece in game.pieces:
+        if not piece.visited or piece.avElectrons > 0:
+            return False
+    return True
 
+def dfs(piece):
+    piece.visited = True
+    for connectedPiece in piece.connections:
+        if not connectedPiece.visited:
+            dfs(connectedPiece)
+    return
 
