@@ -26,15 +26,16 @@ levels = {
     "player_pos" : (3,2)
     },
 
-    #Level 13 - Scoop
+    #Level 13 - RoadRunner
     3: {"board" : [
     ['y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y'],
-    ['y', None, None, 'H', None, 'O', None, None, 'y'],
     ['y', None, None, None, None, None, None, None, 'y'],
-    ['y', None, 'H', None, 'H', None, 'H', None, 'y'],
+    ['y', None, None, 'H', None, 'H', None, None, 'y'],
+    ['y', None, 'O', None, None, None, 'C', None, 'y'],
+    ['y', None, None, 'H', None, 'H', None, None, 'y'],
     ['y', None, None, None, None, None, None, None, 'y'],
     ['y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y']],
-    "player_pos" : (3,3)
+    "player_pos" : (3,2)
     },
 
     #Level 21 - Split (don't know how to implement the +)
