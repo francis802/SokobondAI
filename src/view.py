@@ -12,8 +12,9 @@ grey = (128,128,128)
 # Board colors
 COLORS = {
     'H': red,
-    'g': green,
+    'N': green,
     'O': blue,
+    'C': yellow,
     'y': yellow,
     'g': grey,
     None: white

@@ -16,7 +16,7 @@ dt = 0
 # Game Name
 game_name = "SOKOBOND"
 
-game = model.Game(levels[1], (1,1))
+game = model.Game(levels[1]["board"], levels[1]["player_pos"])
 print("Wall positions: ", game.walls)
 for piece in game.pieces:
     print(piece.position, end=" ")
@@ -56,9 +56,7 @@ game_started = False
 
 
 # Player position
-player_pos = (1,1)
 game = None
-old_position = (None, None)
 
 while running:
 
@@ -74,7 +72,7 @@ while running:
                 if event.key == pygame.K_RETURN:  # Press Enter
                     if menu_options[menu_option_selected] == "start game":
                         game_started = True
-                        game = model.Game(levels[1], player_pos)
+                        game = model.Game(levels[2]["board"], levels[2]["player_pos"])
                     elif menu_options[menu_option_selected] == "quit":
                         running = False
             else:

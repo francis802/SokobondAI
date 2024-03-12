@@ -2,8 +2,8 @@ import controller
 
 
 
-valenceElectrons = {"H":1,"O":2}
-atoms = ("H","O")
+valenceElectrons = {"H":1,"O":2,"N":3,"C":4}
+atoms = ("H","O","N","C")
 
 class Piece:
 
