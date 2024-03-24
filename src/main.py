@@ -21,6 +21,8 @@ game_name = "SOKOBOND"
 # Fonts
 game_name_font = pygame.font.SysFont("Arial", 100)
 menu_options_font = pygame.font.SysFont("Arial", 24)
+symbol_font = pygame.font.SysFont("Arial", 50)
+
 
 # The options in the menu
 menu_options = ["start game", "settings", "about", "quit"]
@@ -47,7 +49,7 @@ while running:
                 if event.key == pygame.K_RETURN:  # Press Enter
                     if menu_options[menu_option_selected] == "start game":
                         game_started = True
-                        game = model.Game(levels[2]["board"], levels[2]["player_pos"])
+                        game = model.Game(levels[1]["board"], levels[1]["player_pos"])
                     elif menu_options[menu_option_selected] == "quit":
                         running = False
             else:
@@ -61,7 +63,7 @@ while running:
                     controller.movePiece(game, "right")
                     
 
-    view.display(screen, game, game_name, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started)         
+    view.display(screen, game, game_name, symbol_font ,game_name_font, menu_options, menu_options_font, menu_option_selected, game_started)         
     
     dt = clock.tick(60) / 1000
     

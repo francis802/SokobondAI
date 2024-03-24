@@ -1,6 +1,7 @@
 import pygame
 import view
 import model
+import algorythms
 
 
 # ATENTION: The y axis is turned upside down, so to go up you have to subtract 1, and add 1 to go down!!!
@@ -13,7 +14,7 @@ def movePiece(game, direction):
     if validateMove(game, direction) == "stop":
         return
     else:
-        initSearch(game)
+        algorythms.initSearch(game)
     
     pivot = game.pieces[0]
     new_poss = [(pivot.position[0] + moves[direction][0], pivot.position[1] + moves[direction][1])]
@@ -64,7 +65,7 @@ def moveAjacentPiece(game, direction, pivot, new_poss):
 
 def validateMove(game, direction):
     pivot = game.pieces[0]
-    initSearch(game)
+    algorythms.initSearch(game)
     game.pieces[0].visited = True
     return checkMovePiece(pivot, game, direction)
 
@@ -94,11 +95,6 @@ def wallCollision(pivot, game, direction):
         return True
     return False
 
-def initSearch(game):
-    for piece in game.pieces:
-        piece.visited = False
-    return
-
 def nearPieces(piece1, piece2):
     if piece1.position[1] == piece2.position[1]:
         if (piece1.position[0] + 1 == piece2.position[0]):
@@ -113,17 +109,10 @@ def nearPieces(piece1, piece2):
     return ""
 
 def endGame(game):
-    initSearch(game)
-    dfs(game.pieces[0])
+    algorythms.initSearch(game)
+    algorythms.dfs(game.pieces[0])
     for piece in game.pieces:
         if not piece.visited or piece.avElectrons > 0:
             return False
     return True
-
-def dfs(piece):
-    piece.visited = True
-    for connectedPiece in piece.connections:
-        if not connectedPiece.visited:
-            dfs(connectedPiece)
-    return
 
