@@ -17,11 +17,12 @@ class Piece:
 
 
 class Game:
-    def __init__(self, board, player_pos):
-        self.board = board
-        self.player_pos = player_pos
+    def __init__(self, level):
+        self.board = level["board"]
+        self.player_pos = level["player_pos"]
         self.pieces = self.listPieces()
         self.walls = self.listWalls()
+        self.cut_pieces = level["cut_pieces"]
         self.Connections()
 
     def listPieces(self):
