@@ -55,7 +55,7 @@ while running:
                         level_menu = True
                     elif menu_options[menu_option_selected] == "quit":
                         running = False
-            if level_menu:
+            elif level_menu:
                 if event.key in (pygame.K_w, pygame.K_UP):
                     level_option_selected = (level_option_selected - 1) % len(level_option)
                 if event.key in (pygame.K_s, pygame.K_DOWN):
