@@ -34,6 +34,10 @@ def movePiece(game, direction):
         print(piece.avElectrons)
         print("-----------------")
 
+    measure = algorythms.proximityMeasure(game)
+    print("Proximity Measure: ", measure)
+    print("Pivot: ", pivot.position)
+
     return
 
 def newConnections(game):
