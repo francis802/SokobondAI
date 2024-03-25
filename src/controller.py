@@ -88,6 +88,7 @@ def checkMovePiece(pivot, game, direction):
             if result == "stop":
                 return "stop"
 
+    cutCrossing = []
     for connectedPiece in pivot.connections:
         if not connectedPiece.visited:
             if not checkDotCrossing(pivot, connectedPiece, direction, game.cut_pieces):
@@ -96,10 +97,13 @@ def checkMovePiece(pivot, game, direction):
                 if result == "stop":
                     return "stop"
             else:
-                pivot.connections.remove(connectedPiece)
-                pivot.avElectrons += 1
-                connectedPiece.connections.remove(pivot)
-                connectedPiece.avElectrons += 1
+                cutCrossing.append(connectedPiece)
+    for cuttedPiece in cutCrossing:
+        pivot.connections.remove(cuttedPiece)
+        pivot.avElectrons += 1
+        cuttedPiece.connections.remove(pivot)
+        cuttedPiece.avElectrons += 1
+
     return "move"
 
 def wallCollision(pivot, game, direction):
