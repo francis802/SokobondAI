@@ -1,6 +1,5 @@
 import pygame
 
-
 #Colors
 white = (255, 255, 255)
 red = (255, 0, 0)
@@ -8,6 +7,7 @@ green = (0, 255, 0)
 blue = (0, 0, 255)
 yellow = (255, 255, 0)
 grey = (128,128,128)
+black = (0,0,0)
 
 # Board colors
 COLORS = {
@@ -52,28 +52,32 @@ def drawGame(screen, game, symbol_font):
         
         for wall in game.walls:
             pygame.draw.rect(screen, grey, (wall[1] * 100, wall[0] * 100, 100, 100))
+        
+        for cut_piece in game.cut_pieces:
+            pygame.draw.circle(screen, red, (cut_piece[1] * 100, cut_piece[0] * 100), 10)
+            pygame.draw.line(screen, black, (cut_piece[1] * 100 - 5, cut_piece[0] * 100), (cut_piece[1] * 100 + 5, cut_piece[0] * 100), 2)
 
-        for piece in game.pieces:
+        for index, piece in enumerate(game.pieces):
             # Draw connections:
                 for connection in piece.connections:
                     pygame.draw.line(screen, (0,0,0), (piece.position[1] * 100 + 50, piece.position[0] * 100 + 50), (connection.position[1] * 100 + 50, connection.position[0] * 100 + 50), 5)    
 
             # Draw the piece:
                 pygame.draw.circle(screen, COLORS[piece.atom], (piece.position[1] * 100 + 50, piece.position[0] * 100 + 50), 40)
-                pygame.draw.circle(screen, (0,0,0), (piece.position[1] * 100 + 50, piece.position[0] * 100 + 50), 40, 5)
+                pygame.draw.circle(screen, black, (piece.position[1] * 100 + 50, piece.position[0] * 100 + 50), 40, 5)
                 text_surface = symbol_font.render(piece.atom, True, (0,0,0))
                 text_rect = text_surface.get_rect(center=(piece.position[1] * 100 + 50, piece.position[0] * 100 + 50))
                 screen.blit(text_surface, text_rect)
 
             # Draw avElectrons:
-                for atoms in range(piece.avElectrons):
-                    angle = (360 / piece.avElectrons) * atoms
+                for electrons in range(piece.avElectrons):
+                    angle = (360 / piece.avElectrons) * electrons
                     # Calcular a posição relativa do elétron de valência em relação ao átomo
-                    relative_x = int(30 * pygame.math.Vector2().rotate(angle).x)
-                    relative_y = int(30 * pygame.math.Vector2().rotate(angle).y)
+                    relative_x = int(pygame.math.Vector2(39, 0).rotate(angle).x)
+                    relative_y = int(pygame.math.Vector2(39, 0).rotate(angle).y)
                     # Calcular a posição absoluta do elétron de valência em relação à tela
-                    x = piece.position[1] * 100 + 76 + relative_x
-                    y = piece.position[0] * 100 + 76 + relative_y
+                    x = piece.position[1] * 100 + 50 + relative_x
+                    y = piece.position[0] * 100 + 50 + relative_y
                     pygame.draw.circle(screen, white, (x , y), 10)
                     pygame.draw.circle(screen, (0,0,0), (x, y), 10, 5)
             

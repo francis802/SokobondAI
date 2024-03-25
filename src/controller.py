@@ -1,6 +1,7 @@
 import pygame
 import view
 import model
+import copy
 import algorythms
 
 
@@ -67,7 +68,11 @@ def validateMove(game, direction):
     pivot = game.pieces[0]
     algorythms.initSearch(game)
     game.pieces[0].visited = True
-    return checkMovePiece(pivot, game, direction)
+    prev_pieces_state = copy.deepcopy(game.pieces)
+    if checkMovePiece(pivot, game, direction) == "stop":
+        game.pieces = prev_pieces_state
+        return "stop"
+    return "move"
 
 def checkMovePiece(pivot, game, direction):
     if(wallCollision(pivot, game, direction)):
@@ -81,10 +86,16 @@ def checkMovePiece(pivot, game, direction):
 
     for connectedPiece in pivot.connections:
         if not connectedPiece.visited:
-            connectedPiece.visited = True
-            result = checkMovePiece(connectedPiece, game, direction)
-            if result == "stop":
-                return "stop"
+            if not checkDotCrossing(pivot, connectedPiece, direction, game.cut_pieces):
+                connectedPiece.visited = True
+                result = checkMovePiece(connectedPiece, game, direction)
+                if result == "stop":
+                    return "stop"
+            else:
+                pivot.connections.remove(connectedPiece)
+                pivot.avElectrons += 1
+                connectedPiece.connections.remove(pivot)
+                connectedPiece.avElectrons += 1
     return "move"
 
 def wallCollision(pivot, game, direction):
@@ -107,6 +118,34 @@ def nearPieces(piece1, piece2):
         if (piece1.position[1] - 1 == piece2.position[1]):
             return "left"
     return ""
+
+def checkDotCrossing(pivot, connectPiece, direction, dotsArray):
+    connectedDir = nearPieces(pivot, connectPiece)
+
+    # Tuple with the expected direction of the dot
+    # The first element is the direction of the connected piece relative to the pivot
+    # The second element is the direction chosen by the player
+    directions = {
+        ("right", "up"): (0, 1),
+        ("right", "down"): (1, 1),
+        ("left", "up"): (0, 0),
+        ("left", "down"): (1, 0),
+        ("up", "right"): (0, 1),
+        ("up", "left"): (0, 0),
+        ("down", "right"): (1, 1),
+        ("down", "left"): (1, 0),
+    }
+
+    for dot in dotsArray:
+        maxDotDist = max(abs(dot[0] - pivot.position[0]), abs(dot[1] - pivot.position[1]))
+        if maxDotDist > 1 or (connectedDir, direction) not in directions.keys():
+            continue
+        expected_position = (pivot.position[0] + directions[(connectedDir, direction)][0], pivot.position[1] + directions[(connectedDir, direction)][1])
+        if dot == expected_position:
+            return True
+
+    return False
+
 
 def endGame(game):
     algorythms.initSearch(game)
