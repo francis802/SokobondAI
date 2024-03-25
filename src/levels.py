@@ -51,6 +51,18 @@ levels = {
         ['y','y','y','y','y','y','y','y','y','y']],
         "player_pos" : (4,1),
         "cut_pieces" : [(3,5)]
+    },
+
+    5: {"board" : [
+        ['y','y','y','y','y',None,None,None,None,None],
+        ['y','C',None,'H','y','y','y','y','y',None],
+        ['y',None,None,None,'y','H','y','H','y','y'],
+        ['y',None,'O',None,None,None,None,None,None,'y'],
+        ['y',None,None,None,'y','H','y','H','y','y'],
+        ['y','C',None,'H','y','y','y','y','y',None],
+        ['y','y','y','y','y',None,None,None,None,None]],
+        "player_pos" : (3,2),
+        "cut_pieces" : [(2,2),(3,2),(2,3),(3,3),(4,2),(4,3),(5,2),(5,3),(3,4),(4,4),(4,6),(3,6)]
     }
         
 }

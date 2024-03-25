@@ -49,7 +49,7 @@ while running:
                 if event.key == pygame.K_RETURN:  # Press Enter
                     if menu_options[menu_option_selected] == "start game":
                         game_started = True
-                        game = model.Game(levels[2])
+                        game = model.Game(levels[5])
                     elif menu_options[menu_option_selected] == "quit":
                         running = False
             else:
