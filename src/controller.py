@@ -108,6 +108,34 @@ def nearPieces(piece1, piece2):
             return "left"
     return ""
 
+def checkDotCrossing(pivot, connectPiece, direction, dotsArray):
+    connectedDir = nearPieces(pivot, connectPiece)
+
+    # Tuple with the expected direction of the dot
+    # The first element is the direction of the connected piece relative to the pivot
+    # The second element is the direction chosen by the player
+    directions = {
+        ("right", "up"): (0, 1),
+        ("right", "down"): (1, 1),
+        ("left", "up"): (0, -1),
+        ("left", "down"): (1, -1),
+        ("up", "right"): (0, 1),
+        ("up", "left"): (0, -1),
+        ("down", "right"): (1, 1),
+        ("down", "left"): (1, -1),
+    }
+
+    for dot in dotsArray:
+        maxDotDist = max(abs(dot[0] - pivot.position[0]), abs(dot[1] - pivot.position[1]))
+        if maxDotDist > 1:
+            continue
+        expected_position = (pivot.position[0] + directions[(connectedDir, direction)][0], pivot.position[1] + directions[(connectedDir, direction)][1])
+        if dot == expected_position:
+            return True
+
+    return False
+
+
 def endGame(game):
     algorythms.initSearch(game)
     algorythms.dfs(game.pieces[0])
