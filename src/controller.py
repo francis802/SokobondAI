@@ -14,6 +14,9 @@ def movePiece(game, direction):
     if validateMove(game, direction) == False:
         return
     
+    changeState(game, direction)
+
+def changeState(game, direction):
     algorythms.initSearch(game)
     for piece in game.pieces:
         if not piece.visited:
@@ -43,7 +46,7 @@ def movePiece(game, direction):
     print("Proximity Measure: ", measure)
     print("Pivot: ", pivot.position)
 
-    return
+    return game
 
 def newConnections(game):
     for piece in game.pieces:

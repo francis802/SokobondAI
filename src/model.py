@@ -57,4 +57,79 @@ class Game:
                         self.pieces[j].avElectrons -= 1
 
 
- 
+class GameState:
+    def __init__(self, game):
+        self.game = game
+
+    def __eq__(self, other):
+        return isinstance(other, GameState) and self.game.pieces == other.game.pieces and self.game.player_pos == other.game.player_pos
+
+    def __hash__(self):
+        return hash(str(self.game) + str(self.player_pos))
+
+    def __str__(self):
+        return "GameState(" + str(self.game) + ", " + str(self.player_pos) + ")"
+
+    def __repr__(self):
+        return str(self)
+    
+    def valid_gamestate(self, direction):
+        return controller.validateMove(self.game, direction)
+    
+    def move_left(self):
+        if self.valid_gamestate("left"):
+            return GameState(controller.changeState(self.game, "left"))
+    
+    def move_right(self):
+        if self.valid_gamestate("right"):
+            return GameState(controller.changeState(self.game, "right"))
+    
+    def move_up(self):
+        if self.valid_gamestate("up"):
+            return GameState(controller.changeState(self.game, "up"))
+    
+    def move_down(self):
+        if self.valid_gamestate("down"):
+            return GameState(controller.changeState(self.game, "down"))
+    
+    def childrenStates(self):
+        children = []
+        movement_methods = [("left", self.move_left), ("right", self.move_right), ("up", self.move_up), ("down", self.move_down)]
+        for move in movement_methods:
+            childState = (move[1])()
+            if childState is not None:
+                children.append(childState)
+        return children
+
+    def check_win(self):
+        return controller.endGame(self.game)
+    
+
+class TreeNode:
+    def __init__(self, state, parent=None, heuristicVal=0):
+        self.state = state
+        self.parent = parent
+        self.heuristicVal = heuristicVal
+        self.treeDepth()
+        self.children = []
+
+    def addChild(self, child):
+        self.children.append(child)
+
+    def treeDepth(self):
+        if self.parent is None:
+            self.depth = 0
+        else:
+            self.depth = self.parent.depth + 1
+    
+    def __eq__(self, other):
+        return isinstance(other, TreeNode) and self.state == other.state
+
+    def __hash__(self):
+        return hash(str(self.state) + str(self.action))
+
+    def __str__(self):
+        return "TreeNode(" + str(self.state) + ", " + str(self.action) + ")"
+
+    def __repr__(self):
+        return str(self)
