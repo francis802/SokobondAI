@@ -148,7 +148,7 @@ def checkDotCrossing(pivot, connectPiece, direction, dotsArray):
 
 def endGame(game):
     algorythms.initSearch(game)
-    algorythms.dfs(game.pieces[0])
+    algorythms.depth_search(game.pieces[0])
     for piece in game.pieces:
         if not piece.visited or piece.avElectrons > 0:
             return False

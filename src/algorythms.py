@@ -1,4 +1,4 @@
-from model import TreeNode, GameState
+from model import TreeNode, GameState, Game
 from collections import deque
 import heapq
 
@@ -7,11 +7,11 @@ def initSearch(game):
         piece.visited = False
     return
 
-def dfs(piece):
+def depth_search(piece):
     piece.visited = True
     for connectedPiece in piece.connections:
         if not connectedPiece.visited:
-            dfs(connectedPiece)
+            depth_search(connectedPiece)
     return
 
 def evaluation(game):
@@ -20,7 +20,7 @@ def evaluation(game):
     for piece in game.pieces:
         if not piece.visited:
             molecules += 1
-            dfs(piece)
+            depth_search(piece)
     
     totalElectrons = 0
     for piece in game.pieces:
@@ -83,7 +83,7 @@ def proximityMeasure(game):
 
 # Algorithm for GameState
 
-def bfs(game):
+def BFS(game: Game):
     visited = []
     root = TreeNode(GameState(game))
     queue = deque([root])
@@ -100,4 +100,23 @@ def bfs(game):
                 leaf = TreeNode(state[1])
                 node.add_child(leaf)
                 queue.append(leaf)
+    return None
+
+def DFS(game: Game):
+    visited = []
+    root = TreeNode(GameState(game))
+    stack = [root]
+
+    while stack:
+        node = stack.pop()  
+        node.treeDepth()
+        if node.state.check_win():
+            return node
+        
+        if node not in visited:
+            visited.append(node)
+            for state in node.state.childrenStates():
+                leaf = TreeNode(state[1])
+                node.add_child(leaf)
+                stack.append(leaf)
     return None

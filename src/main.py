@@ -3,7 +3,7 @@ import controller
 from levels import levels
 import view
 from model import Game
-from algorythms import bfs
+from algorythms import DFS, BFS
 
 # ATENTION: The y axis is turned upside down, so to go up you have to subtract 1, and add 1 to go down!!!
 
@@ -55,8 +55,8 @@ while running:
                     if menu_options[menu_option_selected] == "start game":
                         #level_menu = True
                         game_started = True
-                        game = Game(levels[4])
-                        print(bfs(game))
+                        game = Game(levels[3])
+                        print(DFS(game))
                     elif menu_options[menu_option_selected] == "quit":
                         running = False
             elif level_menu:
