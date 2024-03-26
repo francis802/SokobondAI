@@ -1,3 +1,6 @@
+from model import TreeNode, GameState
+from collections import deque
+import heapq
 
 def initSearch(game):
     for piece in game.pieces:
@@ -77,4 +80,24 @@ def proximityMeasure(game):
     
     return minDistance - 1
 
-   
+
+# Algorithm for GameState
+
+def bfs(game):
+    visited = []
+    root = TreeNode(GameState(game))
+    queue = deque([root])
+
+    while queue:
+        node = queue.popleft()  
+        node.treeDepth()
+        if node.state.check_win():
+            return node
+        
+        if node not in visited:
+            visited.append(node)
+            for state in node.state.childrenStates():
+                leaf = TreeNode(state[1])
+                node.add_child(leaf)
+                queue.append(leaf)
+    return None

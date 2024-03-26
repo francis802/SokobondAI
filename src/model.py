@@ -1,4 +1,5 @@
 import controller
+import copy
 
 
 
@@ -62,13 +63,24 @@ class GameState:
         self.game = game
 
     def __eq__(self, other):
-        return isinstance(other, GameState) and self.game.pieces == other.game.pieces and self.game.player_pos == other.game.player_pos
+        return isinstance(other, GameState) and self.comparePieces(other)
+
+    def comparePieces(self, other):
+        for i in range(len(self.game.pieces)):
+            if self.game.pieces[i].atom != other.game.pieces[i].atom or self.game.pieces[i].position != other.game.pieces[i].position or self.game.pieces[i].avElectrons != other.game.pieces[i].avElectrons:
+                return False
+            if len(self.game.pieces[i].connections) != len(other.game.pieces[i].connections):
+                return False
+            for j in range(len(self.game.pieces[i].connections)):
+                if self.game.pieces[i].connections[j].position != other.game.pieces[i].connections[j].position:
+                    return False
+        return True
 
     def __hash__(self):
-        return hash(str(self.game) + str(self.player_pos))
+        return hash(str(self.game.pieces))
 
     def __str__(self):
-        return "GameState(" + str(self.game) + ", " + str(self.player_pos) + ")"
+        return "GameState(" + str(self.game.pieces) + ")"
 
     def __repr__(self):
         return str(self)
@@ -78,19 +90,19 @@ class GameState:
     
     def move_left(self):
         if self.valid_gamestate("left"):
-            return GameState(controller.changeState(self.game, "left"))
+            return GameState(controller.changeState(copy.deepcopy(self.game), "left"))
     
     def move_right(self):
         if self.valid_gamestate("right"):
-            return GameState(controller.changeState(self.game, "right"))
+            return GameState(controller.changeState(copy.deepcopy(self.game), "right"))
     
     def move_up(self):
         if self.valid_gamestate("up"):
-            return GameState(controller.changeState(self.game, "up"))
+            return GameState(controller.changeState(copy.deepcopy(self.game), "up"))
     
     def move_down(self):
         if self.valid_gamestate("down"):
-            return GameState(controller.changeState(self.game, "down"))
+            return GameState(controller.changeState(copy.deepcopy(self.game), "down"))
     
     def childrenStates(self):
         children = []
@@ -98,7 +110,7 @@ class GameState:
         for move in movement_methods:
             childState = (move[1])()
             if childState is not None:
-                children.append(childState)
+                children.append((move[0],childState))
         return children
 
     def check_win(self):
@@ -113,8 +125,10 @@ class TreeNode:
         self.treeDepth()
         self.children = []
 
-    def addChild(self, child):
-        self.children.append(child)
+    def add_child(self, child_node):
+        self.children.append(child_node)
+        child_node.parent = self
+        self.treeDepth()
 
     def treeDepth(self):
         if self.parent is None:
@@ -126,10 +140,10 @@ class TreeNode:
         return isinstance(other, TreeNode) and self.state == other.state
 
     def __hash__(self):
-        return hash(str(self.state) + str(self.action))
+        return hash(str(self.state) + str(self.depth))
 
     def __str__(self):
-        return "TreeNode(" + str(self.state) + ", " + str(self.action) + ")"
+        return "TreeNode(" + str(self.state) + ", " + str(self.depth) + ")"
 
     def __repr__(self):
         return str(self)

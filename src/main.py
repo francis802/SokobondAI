@@ -1,8 +1,9 @@
 import pygame
+import controller
 from levels import levels
 import view
-import model
-import controller
+from model import Game
+from algorythms import bfs
 
 # ATENTION: The y axis is turned upside down, so to go up you have to subtract 1, and add 1 to go down!!!
 
@@ -54,7 +55,8 @@ while running:
                     if menu_options[menu_option_selected] == "start game":
                         #level_menu = True
                         game_started = True
-                        game = model.Game(levels[5])
+                        game = Game(levels[4])
+                        print(bfs(game))
                     elif menu_options[menu_option_selected] == "quit":
                         running = False
             elif level_menu:
@@ -65,19 +67,19 @@ while running:
                 if event.key == pygame.K_RETURN:  # Press Enter
                     if level_option[level_option_selected] == "Level 1":
                         game_started = True
-                        game = model.Game(levels[1]) 
+                        game = Game(levels[1]) 
                     elif level_option[level_option_selected] == "Level 2":
                         game_started = True
-                        game = model.Game(levels[2]) 
+                        game = Game(levels[2]) 
                     elif level_option[level_option_selected] == "Level 3":
                         game_started = True
-                        game = model.Game(levels[3]) 
+                        game = Game(levels[3]) 
                     elif level_option[level_option_selected] == "Level 4":
                         game_started = True
-                        game = model.Game(levels[4])
+                        game = Game(levels[4])
                     elif level_option[level_option_selected] == "Level 5":
                         game_started = True
-                        game = model.Game(levels[5])  
+                        game = Game(levels[5])  
             else:
                 if event.key in (pygame.K_s, pygame.K_DOWN):
                     controller.movePiece(game, "down")

@@ -1,6 +1,3 @@
-import pygame
-import view
-import model
 import algorythms
 
 
@@ -32,19 +29,6 @@ def changeState(game, direction):
     moveAjacentPiece(game, direction, pivot, new_poss)
     
     newConnections(game)
-
-    for piece in game.pieces:
-        print(piece.atom, end=": ")
-        print(piece.position)
-        print("Connections:", end=" ")
-        print(piece.connections)
-        print("Available Electrons:", end=" ")
-        print(piece.avElectrons)
-        print("-----------------")
-
-    measure = algorythms.proximityMeasure(game)
-    print("Proximity Measure: ", measure)
-    print("Pivot: ", pivot.position)
 
     return game
 
@@ -101,7 +85,6 @@ def checkMovePiece(pivot, game, direction):
         return False
     for otherPiece in game.pieces:
         if (nearPieces(pivot, otherPiece) == direction and otherPiece not in pivot.connections):
-            print("Other piece: ", otherPiece.position)
             result = checkMovePiece(otherPiece, game, direction)
             if result == False:
                 return False
@@ -118,9 +101,7 @@ def checkMovePiece(pivot, game, direction):
 
 def wallCollision(pivot, game, direction):
     new_move = (pivot.position[0] + moves[direction][0], pivot.position[1] + moves[direction][1])
-    print("Move: ", new_move)
     if(new_move in game.walls):
-        print("Wall collision")
         return True
     return False
 
