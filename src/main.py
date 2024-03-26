@@ -52,7 +52,9 @@ while running:
                     menu_option_selected = (menu_option_selected + 1) % len(menu_options)
                 if event.key == pygame.K_RETURN:  # Press Enter
                     if menu_options[menu_option_selected] == "start game":
-                        level_menu = True
+                        #level_menu = True
+                        game_started = True
+                        game = model.Game(levels[5])
                     elif menu_options[menu_option_selected] == "quit":
                         running = False
             elif level_menu:

@@ -1,7 +1,6 @@
 import pygame
 import view
 import model
-import copy
 import algorythms
 
 
@@ -12,10 +11,16 @@ def movePiece(game, direction):
     if direction not in moves.keys():
         raise ValueError("Invalid direction")
     
-    if validateMove(game, direction) == "stop":
+    if validateMove(game, direction) == False:
         return
-    else:
-        algorythms.initSearch(game)
+    
+    algorythms.initSearch(game)
+    for piece in game.pieces:
+        if not piece.visited:
+            piece.visited = True
+            cutConnections(piece, game, direction)
+    
+    algorythms.initSearch(game)
     
     pivot = game.pieces[0]
     new_poss = [(pivot.position[0] + moves[direction][0], pivot.position[1] + moves[direction][1])]
@@ -66,36 +71,13 @@ def moveAjacentPiece(game, direction, pivot, new_poss):
             moveAjacentPiece(game, direction, piece, new_poss)
     return
 
-
-
-def validateMove(game, direction):
-    pivot = game.pieces[0]
-    algorythms.initSearch(game)
-    game.pieces[0].visited = True
-    prev_pieces_state = copy.deepcopy(game.pieces)
-    if checkMovePiece(pivot, game, direction) == "stop":
-        game.pieces = prev_pieces_state
-        return "stop"
-    return "move"
-
-def checkMovePiece(pivot, game, direction):
-    if(wallCollision(pivot, game, direction)):
-        return "stop"
-    for otherPiece in game.pieces:
-        if (nearPieces(pivot, otherPiece) == direction and otherPiece not in pivot.connections):
-            print("Other piece: ", otherPiece.position)
-            result = checkMovePiece(otherPiece, game, direction)
-            if result == "stop":
-                return "stop"
-
+def cutConnections(pivot, game, direction):
     cutCrossing = []
     for connectedPiece in pivot.connections:
         if not connectedPiece.visited:
             if not checkDotCrossing(pivot, connectedPiece, direction, game.cut_pieces):
                 connectedPiece.visited = True
-                result = checkMovePiece(connectedPiece, game, direction)
-                if result == "stop":
-                    return "stop"
+                cutConnections(connectedPiece, game, direction)
             else:
                 cutCrossing.append(connectedPiece)
     for cuttedPiece in cutCrossing:
@@ -104,7 +86,32 @@ def checkMovePiece(pivot, game, direction):
         cuttedPiece.connections.remove(pivot)
         cuttedPiece.avElectrons += 1
 
-    return "move"
+
+def validateMove(game, direction):
+    pivot = game.pieces[0]
+    algorythms.initSearch(game)
+    game.pieces[0].visited = True
+    return checkMovePiece(pivot, game, direction)
+
+def checkMovePiece(pivot, game, direction):
+    if(wallCollision(pivot, game, direction)):
+        return False
+    for otherPiece in game.pieces:
+        if (nearPieces(pivot, otherPiece) == direction and otherPiece not in pivot.connections):
+            print("Other piece: ", otherPiece.position)
+            result = checkMovePiece(otherPiece, game, direction)
+            if result == False:
+                return False
+
+    for connectedPiece in pivot.connections:
+        if not connectedPiece.visited:
+            if not checkDotCrossing(pivot, connectedPiece, direction, game.cut_pieces):
+                connectedPiece.visited = True
+                result = checkMovePiece(connectedPiece, game, direction)
+                if result == False:
+                    return False
+
+    return True
 
 def wallCollision(pivot, game, direction):
     new_move = (pivot.position[0] + moves[direction][0], pivot.position[1] + moves[direction][1])
