@@ -117,6 +117,7 @@ def DFS(game: Game):
             visited.append(node)
             for state in node.state.childrenStates():
                 leaf = TreeNode(state[1])
+                leaf.prev_move = state[0]
                 node.add_child(leaf)
                 stack.append(leaf)
     return None
