@@ -55,8 +55,10 @@ while running:
                     if menu_options[menu_option_selected] == "start game":
                         level_menu = True
                         #game_started = True
-                        #game = Game(levels[3])
-                        #print(DFS(game))
+                        #game = Game(levels[2])
+                        #algo = DFS(game)
+                        #algo.print_solution()
+
                     elif menu_options[menu_option_selected] == "quit":
                         running = False
             if level_menu:

@@ -118,8 +118,9 @@ class GameState:
     
 
 class TreeNode:
-    def __init__(self, state, parent=None, heuristicVal=0):
+    def __init__(self, state, prev_move=None, parent=None, heuristicVal=0):
         self.state = state
+        self.prev_move = prev_move
         self.parent = parent
         self.heuristicVal = heuristicVal
         self.treeDepth()
@@ -147,3 +148,18 @@ class TreeNode:
 
     def __repr__(self):
         return str(self)
+    
+    def __lt__(self, other):
+        return self.heuristicVal < other.heuristicVal
+    
+    def print_solution(self):
+        stack = []
+        current = self
+        while current is not None:
+            stack.append(current.prev_move)
+            current = current.parent
+        stack.pop() # First element of stack is None (root)
+        while len(stack)>1:
+            print(stack.pop(), " -> ", end="")
+        print(stack.pop())
+        return
