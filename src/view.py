@@ -21,15 +21,16 @@ COLORS = {
 }
 
 
-def display(screen, game, game_name, symbol_font,game_name_font, menu_options, menu_options_font, menu_option_selected, game_started, level_option, level_option_selected, level_menu):
+def display(screen, game, game_name, symbol_font, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started, level_option, level_option_selected, level_menu):
     screen.fill("grey")
     
-    if not game_started: 
+    if not game_started and not level_menu: 
         drawMenu(screen, game_name, game_name_font, menu_options, menu_options_font, menu_option_selected)
     elif level_menu:
         drawMenuLevels(screen, game_name, game_name_font, level_option, menu_options_font, level_option_selected)
     else:
         drawGame(screen, game, symbol_font)
+
     pygame.display.flip()
 
 
@@ -46,6 +47,7 @@ def drawMenu(screen, game_name, game_name_font, menu_options, menu_options_font,
         if i == menu_option_selected:
             pygame.draw.rect(screen, "orange", highlighted.inflate(20, 10))  # The rectangle shows in the option selected
         screen.blit(option, highlighted)
+    
         
 
 def drawGame(screen, game, symbol_font):
@@ -88,7 +90,7 @@ def drawMenuLevels(screen, game_name, game_name_font, level_option, menu_options
     game_name_surface = game_name_font.render(game_name, True, "black")
     game_name_pos = game_name_surface.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 - 250))
     screen.blit(game_name_surface, game_name_pos)
-    
+
     #Draw Easy, Medium and Hard text
     larger_font = pygame.font.SysFont("Arial", 36)
     easy_text_surface = larger_font.render("Easy", True, "black")
@@ -102,8 +104,9 @@ def drawMenuLevels(screen, game_name, game_name_font, level_option, menu_options
     hard_text_surface = larger_font.render("Hard", True, "black")
     hard_text_pos = hard_text_surface.get_rect(midtop=(3 * screen.get_width() // 4, 350))
     screen.blit(hard_text_surface, hard_text_pos)
+
     # Draw levels 1 and 2
-    for i, option in enumerate(level_option[:2]):
+    for i, option in enumerate(level_option[1:3]):
         option_surface = menu_options_font.render(option, True, (0, 0, 0)) 
         option_pos = option_surface.get_rect(midtop=(screen.get_width() // 4, 450 + i * 50))  
         screen.blit(option_surface, option_pos)
@@ -113,7 +116,7 @@ def drawMenuLevels(screen, game_name, game_name_font, level_option, menu_options
             screen.blit(option_surface, option_pos)
             
     # Draw levels 3 and 4
-    for i, option in enumerate(level_option[2:4]):
+    for i, option in enumerate(level_option[3:5]):
         option_surface = menu_options_font.render(option, True, (0, 0, 0))  
         option_pos = option_surface.get_rect(midtop=(screen.get_width() // 2, 450 + i * 50)) 
         screen.blit(option_surface, option_pos)
@@ -128,9 +131,14 @@ def drawMenuLevels(screen, game_name, game_name_font, level_option, menu_options
         option_pos = option_surface.get_rect(midtop=(3 * screen.get_width() // 4, 450))  
         screen.blit(option_surface, option_pos)
         # Highlight the selected option
-        if 4 == level_option_selected:
+        if 5 == level_option_selected + 1:
             pygame.draw.rect(screen,"orange", option_pos.inflate(20, 10))
             screen.blit(option_surface, option_pos)
+    
+    
+    
+    
+            
             
             
 #Menu to select how to play 
