@@ -30,7 +30,7 @@ menu_options = ["start game", "settings", "about", "quit"]
 menu_option_selected = 0
 
 #Level Options
-level_option = ["Level 1", "Level 2", "Level 3", "Level 4", "Level 5"]
+level_option = ["","Level 1", "Level 2", "Level 3", "Level 4", "Level 5"]
 level_option_selected = 0
 level_menu = False
 
@@ -51,35 +51,33 @@ while running:
                     menu_option_selected = (menu_option_selected - 1) % len(menu_options)
                 if event.key in (pygame.K_s, pygame.K_DOWN):
                     menu_option_selected = (menu_option_selected + 1) % len(menu_options)
-                if event.key == pygame.K_RETURN:  # Press Enter
+                if event.key == pygame.K_RETURN:  
                     if menu_options[menu_option_selected] == "start game":
-                        #level_menu = True
-                        game_started = True
-                        game = Game(levels[3])
-                        print(DFS(game))
+                        level_menu = True
+                        #game_started = True
+                        #game = Game(levels[3])
+                        #print(DFS(game))
                     elif menu_options[menu_option_selected] == "quit":
                         running = False
-            elif level_menu:
+            if level_menu:
                 if event.key in (pygame.K_w, pygame.K_UP):
                     level_option_selected = (level_option_selected - 1) % len(level_option)
                 if event.key in (pygame.K_s, pygame.K_DOWN):
                     level_option_selected = (level_option_selected + 1) % len(level_option)
-                if event.key == pygame.K_RETURN:  # Press Enter
+                if event.key == pygame.K_RETURN and level_option_selected != 0: 
                     if level_option[level_option_selected] == "Level 1":
-                        game_started = True
                         game = Game(levels[1]) 
                     elif level_option[level_option_selected] == "Level 2":
-                        game_started = True
                         game = Game(levels[2]) 
                     elif level_option[level_option_selected] == "Level 3":
-                        game_started = True
                         game = Game(levels[3]) 
                     elif level_option[level_option_selected] == "Level 4":
-                        game_started = True
                         game = Game(levels[4])
                     elif level_option[level_option_selected] == "Level 5":
-                        game_started = True
                         game = Game(levels[5])  
+                    level_menu = False
+                    game_started = True
+                    
             else:
                 if event.key in (pygame.K_s, pygame.K_DOWN):
                     controller.movePiece(game, "down")
@@ -89,9 +87,8 @@ while running:
                     controller.movePiece(game, "left")
                 if event.key in (pygame.K_d, pygame.K_RIGHT):
                     controller.movePiece(game, "right")
-
-    view.display(screen, game, game_name, symbol_font, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started, level_option, level_option_selected, level_menu )
     
+    view.display(screen, game, game_name, symbol_font, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started, level_option, level_option_selected, level_menu)
     dt = clock.tick(60) / 1000
     
     if (game_started and controller.endGame(game)):
