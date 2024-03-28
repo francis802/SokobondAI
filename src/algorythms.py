@@ -122,3 +122,39 @@ def DFS(game: Game):
                 node.add_child(leaf)
                 stack.append(leaf)
     return None
+
+
+
+def greedy_search(game: Game):
+        root = TreeNode(GameState(game))
+        stack = [(root, proximityMeasure(root.state.game))] 
+        filtered_states = [root.state]
+
+        while stack:
+            node, val = stack.pop() 
+            node.treeDepth()
+            print("check win: ", node.state.check_win())
+            if node.state.check_win():
+                return node
+
+            children = node.state.childrenStates()
+            evaluated_children = [(child, proximityMeasure(child[1].game)) for child in children]
+
+            for (child, value) in evaluated_children:
+                if child in filtered_states:
+                    continue
+                
+                filtered_states.append(child)
+
+                # create tree node with the new state
+                child_tree = TreeNode(child[1])
+                child_tree.prev_move = child[0]
+                node.add_child(child_tree)
+                
+
+                # enqueue the child node
+                stack.append((child_tree, value))
+
+            stack = sorted(stack, key = lambda node: node[1], reverse=True)
+
+        return None
