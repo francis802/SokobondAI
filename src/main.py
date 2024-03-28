@@ -34,6 +34,11 @@ level_option = ["","Level 1", "Level 2", "Level 3", "Level 4", "Level 5"]
 level_option_selected = 0
 level_menu = False
 
+#IA Options
+menu_ia_options = ["Play", "IA Play"]
+menu_ia_selected = 0
+menu_ia = False
+
 # Variable to track if the game has started
 game_started = False
 
@@ -46,30 +51,42 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN:
-            if not game_started and not level_menu:
+            if not game_started and not level_menu and not menu_ia:
                 if event.key in (pygame.K_w, pygame.K_UP):
                     menu_option_selected = (menu_option_selected - 1) % len(menu_options)
                 if event.key in (pygame.K_s, pygame.K_DOWN):
                     menu_option_selected = (menu_option_selected + 1) % len(menu_options)
                 if event.key == pygame.K_RETURN:  
                     if menu_options[menu_option_selected] == "start game":
+                        menu_ia = True
                         #level_menu = True
-                        game_started = True
-                        game = Game(levels[3])
+                        #game_started = True
+                        #game = Game(levels[3])
                         #algo = BFS(game)
 
-                        algo = greedy_search(game)
-                        for piece in algo.state.game.pieces:
-                            print( piece.position, piece.atom)
-                            print("Connections:")
-                            for connection in piece.connections:
-                                print(" / ", connection.position, connection.atom)
-                            print("-------------------------------------")
-                        algo.print_solution()
+                        #algo = greedy_search(game)
+                        #for piece in algo.state.game.pieces:
+                        #   print( piece.position, piece.atom)
+                        #    print("Connections:")
+                        #    for connection in piece.connections:
+                        #        print(" / ", connection.position, connection.atom)
+                        #    print("-------------------------------------")
+                        #algo.print_solution()
 
                     elif menu_options[menu_option_selected] == "quit":
                         running = False
-            if level_menu:
+            elif menu_ia:
+                if event.key in (pygame.K_w, pygame.K_UP):
+                    level_option_selected = (level_option_selected - 1) % len(level_option)
+                if event.key in (pygame.K_s, pygame.K_DOWN):
+                    level_option_selected = (level_option_selected + 1) % len(level_option)
+                if event.key == pygame.K_RETURN: 
+                    if menu_ia_options[menu_ia_selected] == "Play":
+                        level_menu = True
+                    elif menu_ia_options[menu_ia_selected] == "IA Play":
+                        level_menu = True
+                    menu_ia = False
+            elif level_menu:
                 if event.key in (pygame.K_w, pygame.K_UP):
                     level_option_selected = (level_option_selected - 1) % len(level_option)
                 if event.key in (pygame.K_s, pygame.K_DOWN):
@@ -98,7 +115,7 @@ while running:
                 if event.key in (pygame.K_d, pygame.K_RIGHT):
                     controller.movePiece(game, "right")
     
-    view.display(screen, game, game_name, symbol_font, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started, level_option, level_option_selected, level_menu)
+    view.display(screen, game, game_name, symbol_font, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started, level_option, level_option_selected, level_menu, menu_ia, menu_ia_selected, menu_ia_options)
     dt = clock.tick(60) / 1000
     
     if (game_started and controller.endGame(game)):
