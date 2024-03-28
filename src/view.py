@@ -111,7 +111,7 @@ def drawMenuLevels(screen, game_name, game_name_font, level_option, menu_options
         option_pos = option_surface.get_rect(midtop=(screen.get_width() // 4, 450 + i * 50))  
         screen.blit(option_surface, option_pos)
         # Highlight the selected option
-        if i == level_option_selected and level_option_selected != 0:
+        if i + 1 == level_option_selected:
             pygame.draw.rect(screen,"orange", option_pos.inflate(20, 10))  
             screen.blit(option_surface, option_pos)
             
@@ -121,7 +121,7 @@ def drawMenuLevels(screen, game_name, game_name_font, level_option, menu_options
         option_pos = option_surface.get_rect(midtop=(screen.get_width() // 2, 450 + i * 50)) 
         screen.blit(option_surface, option_pos)
         # Highlight the selected option
-        if i + 2 == level_option_selected:
+        if i + 3 == level_option_selected:
             pygame.draw.rect(screen,"orange", option_pos.inflate(20, 10))
             screen.blit(option_surface, option_pos)
             
@@ -131,7 +131,7 @@ def drawMenuLevels(screen, game_name, game_name_font, level_option, menu_options
         option_pos = option_surface.get_rect(midtop=(3 * screen.get_width() // 4, 450))  
         screen.blit(option_surface, option_pos)
         # Highlight the selected option
-        if 5 == level_option_selected + 1:
+        if i + 5 == level_option_selected:
             pygame.draw.rect(screen,"orange", option_pos.inflate(20, 10))
             screen.blit(option_surface, option_pos)
     
