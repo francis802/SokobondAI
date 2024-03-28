@@ -3,7 +3,7 @@ import controller
 from levels import levels
 import view
 from model import Game
-from algorythms import DFS, BFS
+from algorythms import DFS, BFS, greedy_search
 
 # ATENTION: The y axis is turned upside down, so to go up you have to subtract 1, and add 1 to go down!!!
 
@@ -53,11 +53,19 @@ while running:
                     menu_option_selected = (menu_option_selected + 1) % len(menu_options)
                 if event.key == pygame.K_RETURN:  
                     if menu_options[menu_option_selected] == "start game":
-                        level_menu = True
-                        #game_started = True
-                        #game = Game(levels[1])
+                        #level_menu = True
+                        game_started = True
+                        game = Game(levels[3])
                         #algo = BFS(game)
-                        #algo.print_solution()
+
+                        algo = greedy_search(game)
+                        for piece in algo.state.game.pieces:
+                            print( piece.position, piece.atom)
+                            print("Connections:")
+                            for connection in piece.connections:
+                                print(" / ", connection.position, connection.atom)
+                            print("-------------------------------------")
+                        algo.print_solution()
 
                     elif menu_options[menu_option_selected] == "quit":
                         running = False
