@@ -90,19 +90,27 @@ class GameState:
     
     def move_left(self):
         if self.valid_gamestate("left"):
-            return GameState(controller.changeState(copy.deepcopy(self.game), "left"))
+            state = GameState(controller.changeState(copy.deepcopy(self.game), "left"))
+            if not controller.impossible_solution(state.game):
+                return state
     
     def move_right(self):
         if self.valid_gamestate("right"):
-            return GameState(controller.changeState(copy.deepcopy(self.game), "right"))
+            state = GameState(controller.changeState(copy.deepcopy(self.game), "right"))
+            if not controller.impossible_solution(state.game):
+                return state
     
     def move_up(self):
         if self.valid_gamestate("up"):
-            return GameState(controller.changeState(copy.deepcopy(self.game), "up"))
+            state = GameState(controller.changeState(copy.deepcopy(self.game), "up"))
+            if not controller.impossible_solution(state.game):
+                return state
     
     def move_down(self):
         if self.valid_gamestate("down"):
-            return GameState(controller.changeState(copy.deepcopy(self.game), "down"))
+            state = GameState(controller.changeState(copy.deepcopy(self.game), "down"))
+            if not controller.impossible_solution(state.game):
+                return state
     
     def childrenStates(self):
         children = []

@@ -154,3 +154,16 @@ def endGame(game):
             return False
     return True
 
+def impossible_solution(game):
+    if game.cut_pieces:
+        return False
+    algorythms.initSearch(game)
+    molecules = []
+    for piece in game.pieces:
+        if not piece.visited:
+            electrons = algorythms.breadth_search(piece)
+            molecules.append(electrons)
+    for electrons in molecules:
+        if electrons == 0 and len(molecules) > 1:
+            return True
+    return False

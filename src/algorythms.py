@@ -14,19 +14,18 @@ def depth_search(piece):
             depth_search(connectedPiece)
     return
 
-def evaluation(game):
-    initSearch(game)
-    molecules = 0
-    for piece in game.pieces:
-        if not piece.visited:
-            molecules += 1
-            depth_search(piece)
-    
-    totalElectrons = 0
-    for piece in game.pieces:
-        totalElectrons += piece.avElectrons
-    
-    return molecules * (totalElectrons + 1)
+def breadth_search(piece):
+    queue = deque([piece])
+    electrons = piece.avElectrons
+    while queue:
+        node = queue.popleft()
+        node.visited = True
+        for connectedPiece in node.connections:
+            if not connectedPiece.visited:
+                electrons += connectedPiece.avElectrons
+                queue.append(connectedPiece)
+    return electrons
+            
 
 
 def distance(piece1, piece2):
