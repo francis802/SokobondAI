@@ -75,8 +75,8 @@ def proximityMeasure(game):
                         near = piece2
                         molecule = piece1
     
-    print("Molecule: ", molecule.position)
-    print("Near: ", near.position)
+    #print("Molecule: ", molecule.position)
+    #print("Near: ", near.position)
     
     return minDistance - 1
 
@@ -125,20 +125,20 @@ def DFS(game: Game):
 
 
 
-def greedy_search(game: Game):
+def greedy_search(game: Game, heuristic):
         root = TreeNode(GameState(game))
         stack = [(root, proximityMeasure(root.state.game))] 
         filtered_states = [root.state]
 
         while stack:
-            node, val = stack.pop() 
+            node, _ = stack.pop() 
             node.treeDepth()
             print("check win: ", node.state.check_win())
             if node.state.check_win():
                 return node
 
             children = node.state.childrenStates()
-            evaluated_children = [(child, proximityMeasure(child[1].game)) for child in children]
+            evaluated_children = [(child, heuristic(child[1].game)) for child in children]
 
             for (child, value) in evaluated_children:
                 if child in filtered_states:
@@ -146,13 +146,42 @@ def greedy_search(game: Game):
                 
                 filtered_states.append(child)
 
-                # create tree node with the new state
                 child_tree = TreeNode(child[1])
                 child_tree.prev_move = child[0]
                 node.add_child(child_tree)
                 
+                stack.append((child_tree, value))
 
-                # enqueue the child node
+            stack = sorted(stack, key = lambda node: node[1], reverse=True)
+
+        return None
+
+
+def a_star_search(game: Game, heuristic):
+        root = TreeNode(GameState(game))
+        stack = [(root, proximityMeasure(root.state.game))] 
+        filtered_states = [root.state]
+
+        while len(stack):
+            node, _ = stack.pop()
+            node.treeDepth()
+            print("check win: ", node.state.check_win())
+            if node.state.check_win():
+                return node
+
+            children = node.state.childrenStates()
+            evaluated_children = [(child, heuristic(child[1].game) + node.depth) for child in children]
+
+            for (child, value) in evaluated_children:
+                if child in filtered_states:
+                    continue
+                
+                filtered_states.append(child)
+
+                child_tree = TreeNode(child[1])
+                child_tree.prev_move = child[0]
+                node.add_child(child_tree)
+                
                 stack.append((child_tree, value))
 
             stack = sorted(stack, key = lambda node: node[1], reverse=True)
