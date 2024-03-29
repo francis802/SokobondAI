@@ -1,6 +1,6 @@
 from model import TreeNode, GameState, Game
 from collections import deque
-import heapq
+from heapq import heappush, heappop
 
 def initSearch(game):
     for piece in game.pieces:
@@ -125,22 +125,23 @@ def DFS(game: Game):
 
 
 
-def greedy_search(game: Game, heuristic):
+def greedy_search(game: Game):
         root = TreeNode(GameState(game))
-        stack = [(root, proximityMeasure(root.state.game))] 
-        filtered_states = [root.state]
+        root.heuristicVal = proximityMeasure(root.state.game)
+        priorityQueue = [] 
+        heappush(priorityQueue, (root.heuristicVal, root))
+        filtered_states = []
 
-        while stack:
-            node, _ = stack.pop() 
+        while priorityQueue:
+            _, node = heappop(priorityQueue)
             node.treeDepth()
-            print("check win: ", node.state.check_win())
             if node.state.check_win():
                 return node
 
             children = node.state.childrenStates()
-            evaluated_children = [(child, heuristic(child[1].game)) for child in children]
+            evaluated_children = [(proximityMeasure(child[1].game), child) for child in children]
 
-            for (child, value) in evaluated_children:
+            for (value, child) in evaluated_children:
                 if child in filtered_states:
                     continue
                 
@@ -150,29 +151,29 @@ def greedy_search(game: Game, heuristic):
                 child_tree.prev_move = child[0]
                 node.add_child(child_tree)
                 
-                stack.append((child_tree, value))
-
-            stack = sorted(stack, key = lambda node: node[1], reverse=True)
+                child_tree.heuristicVal = value
+                heappush(priorityQueue, (value, child_tree))
 
         return None
 
 
-def a_star_search(game: Game, heuristic):
+def a_star_search(game: Game):
         root = TreeNode(GameState(game))
-        stack = [(root, proximityMeasure(root.state.game))] 
-        filtered_states = [root.state]
+        root.heuristicVal = proximityMeasure(root.state.game)
+        priorityQueue = [] 
+        heappush(priorityQueue, (root.heuristicVal, root))
+        filtered_states = []
 
-        while len(stack):
-            node, _ = stack.pop()
+        while priorityQueue:
+            _, node = heappop(priorityQueue)
             node.treeDepth()
-            print("check win: ", node.state.check_win())
             if node.state.check_win():
                 return node
 
             children = node.state.childrenStates()
-            evaluated_children = [(child, heuristic(child[1].game) + node.depth) for child in children]
+            evaluated_children = [(proximityMeasure(child[1].game) + node.depth, child) for child in children]
 
-            for (child, value) in evaluated_children:
+            for (value, child) in evaluated_children:
                 if child in filtered_states:
                     continue
                 
@@ -182,8 +183,7 @@ def a_star_search(game: Game, heuristic):
                 child_tree.prev_move = child[0]
                 node.add_child(child_tree)
                 
-                stack.append((child_tree, value))
-
-            stack = sorted(stack, key = lambda node: node[1], reverse=True)
+                child_tree.heuristicVal = value
+                heappush(priorityQueue, (value, child_tree))
 
         return None

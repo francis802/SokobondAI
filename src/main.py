@@ -3,7 +3,7 @@ import controller
 from levels import levels
 import view
 from model import Game
-from algorythms import DFS, BFS, greedy_search
+from algorythms import DFS, BFS, greedy_search, a_star_search
 
 # ATENTION: The y axis is turned upside down, so to go up you have to subtract 1, and add 1 to go down!!!
 
@@ -61,10 +61,10 @@ while running:
                         menu_ia = True
                         #level_menu = True
                         #game_started = True
-                        #game = Game(levels[3])
+                        #game = Game(levels[4])
                         #algo = BFS(game)
 
-                        #algo = greedy_search(game)
+                        #algo = a_star_search(game)
                         #for piece in algo.state.game.pieces:
                         #   print( piece.position, piece.atom)
                         #    print("Connections:")
