@@ -77,9 +77,9 @@ while running:
                         running = False
             elif menu_ia:
                 if event.key in (pygame.K_w, pygame.K_UP):
-                    level_option_selected = (level_option_selected - 1) % len(level_option)
+                    menu_ia_selected = (menu_ia_selected - 1) % len(menu_ia_options)
                 if event.key in (pygame.K_s, pygame.K_DOWN):
-                    level_option_selected = (level_option_selected + 1) % len(level_option)
+                    menu_ia_selected = (menu_ia_selected + 1) % len(menu_ia_options)
                 if event.key == pygame.K_RETURN: 
                     if menu_ia_options[menu_ia_selected] == "Play":
                         level_menu = True
