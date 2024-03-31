@@ -102,49 +102,56 @@ def drawMenuLevels(screen, game_name, game_name_font, level_option, menu_options
 
     #Draw Easy, Medium and Hard text
     larger_font = pygame.font.SysFont("Arial", 36)
-    easy_text_surface = larger_font.render("Easy", True, "black")
-    easy_text_pos = easy_text_surface.get_rect(midtop=(screen.get_width() // 4, 350))
-    screen.blit(easy_text_surface, easy_text_pos)
-
-    medium_text_surface = larger_font.render("Medium", True, "black")
-    medium_text_pos = medium_text_surface.get_rect(midtop=(screen.get_width() // 2, 350))
-    screen.blit(medium_text_surface, medium_text_pos)
-
-    hard_text_surface = larger_font.render("Hard", True, "black")
-    hard_text_pos = hard_text_surface.get_rect(midtop=(3 * screen.get_width() // 4, 350))
-    screen.blit(hard_text_surface, hard_text_pos)
-
-    # Draw levels 1 and 2
-    for i, option in enumerate(level_option[1:3]):
-        option_surface = menu_options_font.render(option, True, (0, 0, 0)) 
-        option_pos = option_surface.get_rect(midtop=(screen.get_width() // 4, 450 + i * 50))  
+    difficulties = ["Easy", "Medium", "Hard", "Very Hard"]
+    for i, difficulty in enumerate(difficulties):
+        text_surface = larger_font.render(difficulty, True, "black")
+        text_pos = text_surface.get_rect(midtop=((2 * i + 1) * screen.get_width() // (len(difficulties) * 2), 350))
+        screen.blit(text_surface, text_pos)
+            
+    # Draw levels 1, 2, and 3 under the "Easy" column
+    for i, option in enumerate(level_option[1:4]):
+        option_surface = menu_options_font.render(option, True, (0, 0, 0))
+        easy_text_rect = text_surface.get_rect(midtop=((2 * difficulties.index("Easy") + 1) * screen.get_width() // (len(difficulties) * 2), 350))
+        option_pos = option_surface.get_rect(midtop=(easy_text_rect.centerx, easy_text_rect.bottom + 50 + i * (option_surface.get_height() + 15)))  # Adjust the value 10 for spacing
         screen.blit(option_surface, option_pos)
-        # Highlight the selected option
         if i + 1 == level_option_selected:
-            pygame.draw.rect(screen,"orange", option_pos.inflate(20, 10))  
+            pygame.draw.rect(screen, "orange", option_pos.inflate(20, 10))
             screen.blit(option_surface, option_pos)
             
-    # Draw levels 3 and 4
-    for i, option in enumerate(level_option[3:5]):
-        option_surface = menu_options_font.render(option, True, (0, 0, 0))  
-        option_pos = option_surface.get_rect(midtop=(screen.get_width() // 2, 450 + i * 50)) 
+    # Draw levels 4, 5, and 6 under the "Medium" column
+    for i, option in enumerate(level_option[4:7]):
+        option_surface = menu_options_font.render(option, True, (0, 0, 0))
+        medium_text_rect = text_surface.get_rect(midtop=((2 * difficulties.index("Medium") + 1) * screen.get_width() // (len(difficulties) * 2), 350))
+        option_pos = option_surface.get_rect(midtop=(medium_text_rect.centerx, medium_text_rect.bottom + 50 + i * (option_surface.get_height() + 15)))  # Adjust the value 15 for spacing
         screen.blit(option_surface, option_pos)
         # Highlight the selected option
-        if i + 3 == level_option_selected:
-            pygame.draw.rect(screen,"orange", option_pos.inflate(20, 10))
+        if i + 4 == level_option_selected:
+            pygame.draw.rect(screen, "orange", option_pos.inflate(20, 10))
             screen.blit(option_surface, option_pos)
+
             
-    # Draw level 5
-    for i, option in enumerate(level_option[-1:]):
-        option_surface = menu_options_font.render(option, True, (0, 0, 0)) 
-        option_pos = option_surface.get_rect(midtop=(3 * screen.get_width() // 4, 450))  
+    # Draw levels 7 and 8 under the "Hard" column
+    for i, option in enumerate(level_option[7:9]):
+        option_surface = menu_options_font.render(option, True, (0, 0, 0))
+        hard_text_rect = text_surface.get_rect(midtop=((2 * difficulties.index("Hard") + 1) * screen.get_width() // (len(difficulties) * 2), 350))
+        option_pos = option_surface.get_rect(midtop=(hard_text_rect.centerx, hard_text_rect.bottom + 50 + i * (option_surface.get_height() + 15)))  # Adjust the value 15 for spacing
         screen.blit(option_surface, option_pos)
         # Highlight the selected option
-        if i + 5 == level_option_selected:
-            pygame.draw.rect(screen,"orange", option_pos.inflate(20, 10))
+        if i + 7 == level_option_selected:  # Adjusted index to match level_option index
+            pygame.draw.rect(screen, "orange", option_pos.inflate(20, 10))
             screen.blit(option_surface, option_pos)
-    
-    
+
+    # Draw levels 9 and 10 under the "Very Hard" column
+    for i, option in enumerate(level_option[9:11]):  # Adjusted to include level 10
+        option_surface = menu_options_font.render(option, True, (0, 0, 0))
+        very_hard_text_rect = text_surface.get_rect(midtop=((2 * difficulties.index("Very Hard") + 1) * screen.get_width() // (len(difficulties) * 2), 350))
+        option_pos = option_surface.get_rect(midtop=(very_hard_text_rect.centerx, very_hard_text_rect.bottom + 50 + i * (option_surface.get_height() + 15)))  # Adjust the value 15 for spacing
+        screen.blit(option_surface, option_pos)
+        # Highlight the selected option
+        if i + 9 == level_option_selected:  # Adjusted index to match level_option index
+            pygame.draw.rect(screen, "orange", option_pos.inflate(20, 10))
+            screen.blit(option_surface, option_pos)
+
     
     
             

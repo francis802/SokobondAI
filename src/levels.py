@@ -1,7 +1,7 @@
 #Blue is the piece that moves 
 #Red the other symbols
 #yellow is the wall
-#The first 2 levels aHe easy, the next 2 medium and the others hand 
+
 
 levels = {
     #Level 1 - Cell
@@ -28,8 +28,21 @@ levels = {
     "cut_pieces" : []
     },
 
-    #Level 3 - RoadRunner
+    
+    #Level 3 - Split
     3: {"board" : [
+        [None,None,'y','y','y','y','y','y',None,None],
+        [None,None,'y',None,None,None,None,'y',None,None],
+        [None,None,'y',None,None,None,None,'y',None,None],
+        ['y','y','y',None,None,None,None,'y','y','y'],
+        ['y','H','H',None,None,None,None,None,'O','y'],
+        ['y','y','y','y','y','y','y','y','y','y']],
+        "player_pos" : (4,1),
+        "cut_pieces" : [(3,5)]
+    },
+    
+    #Level 4 - RoadRunner
+    4: {"board" : [
     ['y', 'y', 'y', 'y', 'y', 'y', 'y', 'y', 'y'],
     ['y', None, None, None, None, None, None, None, 'y'],
     ['y', None, None, 'H', None, 'H', None, None, 'y'],
@@ -40,34 +53,9 @@ levels = {
     "player_pos" : (3,2),
     "cut_pieces" : []
     },
-    
-    #Level 4 - Split
-    4: {"board" : [
-        [None,None,'y','y','y','y','y','y',None,None],
-        [None,None,'y',None,None,None,None,'y',None,None],
-        [None,None,'y',None,None,None,None,'y',None,None],
-        ['y','y','y',None,None,None,None,'y','y','y'],
-        ['y','H','H',None,None,None,None,None,'O','y'],
-        ['y','y','y','y','y','y','y','y','y','y']],
-        "player_pos" : (4,1),
-        "cut_pieces" : [(3,5)]
-    },
 
-    #Level 5 - Plunge (Unfeasible)
+    #Level 5 - Kruskal
     5: {"board" : [
-        ['y','y','y','y','y',None,None,None,None,None],
-        ['y','C',None,'H','y','y','y','y','y',None],
-        ['y',None,None,None,'y','H','y','H','y','y'],
-        ['y',None,'O',None,None,None,None,None,None,'y'],
-        ['y',None,None,None,'y','H','y','H','y','y'],
-        ['y','C',None,'H','y','y','y','y','y',None],
-        ['y','y','y','y','y',None,None,None,None,None]],
-        "player_pos" : (3,2),
-        "cut_pieces" : [(2,2),(3,2),(2,3),(3,3),(4,2),(4,3),(5,2),(5,3),(3,4),(4,4),(4,6),(3,6)]
-    },
-
-    #Level 6 - Kruskal
-    6: {"board" : [
         ['y','y','y','y','y','y','y'],
         ['y',None,None,'y',None,None,'y'],
         ['y','H',None,'O',None,'H','y'],
@@ -80,26 +68,10 @@ levels = {
         "player_pos" : (4,3),
         "cut_pieces" : []
     },
+    
+    #Level 6 - Around
 
-    #Level 7 - Grand Slam (Unfeasible)
-
-    7: {"board" : [
-        [None, 'y','y','y','y','y','y','y','y','y'],
-        [None, 'y',None,None,'H',None,None,None,None,'y'],
-        ['y', 'y','H',None,'C',None,'H',None,None,'y'],
-        ['y', None,None,None,None,None,None,'H',None,'y'],
-        ['y', 'O',None,None,'C',None,None,None,None,'y'],
-        ['y', None,None,None,None,None,None,'H',None,'y'],
-        ['y', 'y','H',None,'C',None,'H',None,None,'y'],
-        [None, 'y',None,None,'H',None,None,None,None,'y'],
-        [None, 'y','y','y','y','y','y','y','y','y']],
-        "player_pos" : (4,1),
-        "cut_pieces" : []
-    },
-
-    #Level 8 - Around
-
-    8: {"board" : [
+    6: {"board" : [
         [None,'y','y','y','y','y',None],
         ['y','y',None,None,None,'y','y'],
         ['y',None,None,'H',None,None,'y'],
@@ -111,9 +83,9 @@ levels = {
         "cut_pieces" : [(3,3),(4,3),(3,4),(4,4)]
     },
 
-    #Level 9 - Chandelier
 
-    9: {"board" : [
+    #Level 7 - Chandelier
+    7: {"board" : [
         [None, 'y','y','y','y','y',None],
         ['y', 'y',None,'H',None,'y','y'],
         ['y', None,None,None,None,None,'y'],
@@ -127,9 +99,8 @@ levels = {
         "cut_pieces" : []
     },
 
-    #Level 10 - Infinity
-
-    10: {"board" : [
+    #Level 8 - Infinity
+    8: {"board" : [
         [None,'y','y','y',None,'y','y','y',None],
         ['y','y','H','y','y','y','H','y','y'],
         ['y',None,None,None,'y',None,None,None,'y'],
@@ -139,6 +110,35 @@ levels = {
         [None,'y','y','y',None,'y','y','y',None]],
         "player_pos" : (1,2),
         "cut_pieces" : [(2,2),(2,3),(2,6),(2,7),(3,4),(4,4),(3,5),(4,5),(5,2),(5,3),(5,6),(5,7)]
+    },
+    
+    #Level 9 - Plunge (Unfeasible)
+    9: {"board" : [
+        ['y','y','y','y','y',None,None,None,None,None],
+        ['y','C',None,'H','y','y','y','y','y',None],
+        ['y',None,None,None,'y','H','y','H','y','y'],
+        ['y',None,'O',None,None,None,None,None,None,'y'],
+        ['y',None,None,None,'y','H','y','H','y','y'],
+        ['y','C',None,'H','y','y','y','y','y',None],
+        ['y','y','y','y','y',None,None,None,None,None]],
+        "player_pos" : (3,2),
+        "cut_pieces" : [(2,2),(3,2),(2,3),(3,3),(4,2),(4,3),(5,2),(5,3),(3,4),(4,4),(4,6),(3,6)]
+    },
+    
+    #Level 10 - Grand Slam (Unfeasible)
+
+    10: {"board" : [
+        [None, 'y','y','y','y','y','y','y','y','y'],
+        [None, 'y',None,None,'H',None,None,None,None,'y'],
+        ['y', 'y','H',None,'C',None,'H',None,None,'y'],
+        ['y', None,None,None,None,None,None,'H',None,'y'],
+        ['y', 'O',None,None,'C',None,None,None,None,'y'],
+        ['y', None,None,None,None,None,None,'H',None,'y'],
+        ['y', 'y','H',None,'C',None,'H',None,None,'y'],
+        [None, 'y',None,None,'H',None,None,None,None,'y'],
+        [None, 'y','y','y','y','y','y','y','y','y']],
+        "player_pos" : (4,1),
+        "cut_pieces" : []
     }
         
 }

@@ -31,7 +31,7 @@ menu_options = ["start game", "about", "quit"]
 menu_option_selected = 0
 
 #Level Options
-level_option = ["","Level 1", "Level 2", "Level 3", "Level 4", "Level 5"]
+level_option = ["","Level 1", "Level 2", "Level 3", "Level 4", "Level 5", "Level 6", "Level 7", "Level 8", "Level 9", "Level 10"]
 level_option_selected = 0
 level_menu = False
 
@@ -135,6 +135,16 @@ while running:
                         arena = Arena(levels[4])
                     elif level_option[level_option_selected] == "Level 5":
                         arena = Arena(levels[5])
+                    elif level_option[level_option_selected] == "Level 6":
+                        arena = Arena(levels[6])
+                    elif level_option[level_option_selected] == "Level 7":
+                        arena = Arena(levels[7])
+                    elif level_option[level_option_selected] == "Level 8":
+                        arena = Arena(levels[8])
+                    elif level_option[level_option_selected] == "Level 9":
+                        arena = Arena(levels[9])
+                    elif level_option[level_option_selected] == "Level 10":
+                        arena = Arena(levels[10])                
                     game = Game(arena)
                     level_menu = False
                     game_started = True
