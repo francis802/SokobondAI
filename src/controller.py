@@ -9,36 +9,36 @@ def movePiece(game, direction, prev_states):
     if direction not in moves.keys():
         raise ValueError("Invalid direction")
     
-    if validateMove(game, direction) == False:
+    if validateMove(game.pieces, direction, game.arena) == False:
         return
     
-    prev_states.append(copy.deepcopy(game))
+    prev_states.append(copy.deepcopy(game.pieces))
     
-    changeState(game, direction)
+    changeState(game.pieces, direction, game.arena)
     
 
-def changeState(game, direction):
-    algorythms.initSearch(game)
-    for piece in game.pieces:
+def changeState(pieces, direction, arena):
+    algorythms.initSearch(pieces)
+    for piece in pieces:
         if not piece.visited:
             piece.visited = True
-            cutConnections(piece, game, direction)
+            cutConnections(piece, direction, arena)
     
-    algorythms.initSearch(game)
+    algorythms.initSearch(pieces)
     
-    pivot = game.pieces[0]
+    pivot = pieces[0]
     new_poss = [(pivot.position[0] + moves[direction][0], pivot.position[1] + moves[direction][1])]
     pivot.position = (pivot.position[0] + moves[direction][0], pivot.position[1] + moves[direction][1])
     pivot.visited = True
-    moveAjacentPiece(game, direction, pivot, new_poss)
+    moveAjacentPiece(pieces, direction, pivot, new_poss)
     
-    newConnections(game)
+    newConnections(pieces)
 
-    return game
+    return pieces
 
-def newConnections(game):
-    for piece in game.pieces:
-        for possibleConnection in game.pieces:
+def newConnections(pieces):
+    for piece in pieces:
+        for possibleConnection in pieces:
             if piece != possibleConnection and possibleConnection not in piece.connections and (nearPieces(piece, possibleConnection) != "") and piece.avElectrons > 0 and possibleConnection.avElectrons > 0:
                 piece.connections.append(possibleConnection)
                 piece.avElectrons -= 1
@@ -46,29 +46,29 @@ def newConnections(game):
                 possibleConnection.avElectrons -= 1
     return
 
-def moveAjacentPiece(game, direction, pivot, new_poss):
+def moveAjacentPiece(pieces, direction, pivot, new_poss):
     for piece in pivot.connections:
         if not piece.visited:
             new_poss.append((piece.position[0] + moves[direction][0], piece.position[1] + moves[direction][1]))
             piece.position = (piece.position[0] + moves[direction][0], piece.position[1] + moves[direction][1])
             piece.visited = True
-            moveAjacentPiece(game, direction, piece, new_poss)
+            moveAjacentPiece(pieces, direction, piece, new_poss)
     
-    for piece in game.pieces:
+    for piece in pieces:
         if piece.position in new_poss and piece != pivot and piece not in pivot.connections and not piece.visited:
             new_poss.append((piece.position[0] + moves[direction][0], piece.position[1] + moves[direction][1]))
             piece.position = (piece.position[0] + moves[direction][0], piece.position[1] + moves[direction][1])
             piece.visited = True
-            moveAjacentPiece(game, direction, piece, new_poss)
+            moveAjacentPiece(pieces, direction, piece, new_poss)
     return
 
-def cutConnections(pivot, game, direction):
+def cutConnections(pivot, direction, arena):
     cutCrossing = []
     for connectedPiece in pivot.connections:
         if not connectedPiece.visited:
-            if not checkDotCrossing(pivot, connectedPiece, direction, game.cut_pieces):
+            if not checkDotCrossing(pivot, connectedPiece, direction, arena.cut_pieces):
                 connectedPiece.visited = True
-                cutConnections(connectedPiece, game, direction)
+                cutConnections(connectedPiece, direction, arena)
             else:
                 cutCrossing.append(connectedPiece)
     for cuttedPiece in cutCrossing:
@@ -78,34 +78,34 @@ def cutConnections(pivot, game, direction):
         cuttedPiece.avElectrons += 1
 
 
-def validateMove(game, direction):
-    pivot = game.pieces[0]
-    algorythms.initSearch(game)
-    game.pieces[0].visited = True
-    return checkMovePiece(pivot, game, direction)
+def validateMove(pieces, direction, arena):
+    pivot = pieces[0]
+    algorythms.initSearch(pieces)
+    pieces[0].visited = True
+    return checkMovePiece(pivot, pieces, direction, arena)
 
-def checkMovePiece(pivot, game, direction):
-    if(wallCollision(pivot, game, direction)):
+def checkMovePiece(pivot, pieces, direction, arena):
+    if(wallCollision(pivot, arena, direction)):
         return False
-    for otherPiece in game.pieces:
+    for otherPiece in pieces:
         if (nearPieces(pivot, otherPiece) == direction and otherPiece not in pivot.connections):
-            result = checkMovePiece(otherPiece, game, direction)
+            result = checkMovePiece(otherPiece, pieces, direction, arena)
             if result == False:
                 return False
 
     for connectedPiece in pivot.connections:
         if not connectedPiece.visited:
-            if not checkDotCrossing(pivot, connectedPiece, direction, game.cut_pieces):
+            if not checkDotCrossing(pivot, connectedPiece, direction, arena.cut_pieces):
                 connectedPiece.visited = True
-                result = checkMovePiece(connectedPiece, game, direction)
+                result = checkMovePiece(connectedPiece, pieces, direction, arena)
                 if result == False:
                     return False
 
     return True
 
-def wallCollision(pivot, game, direction):
+def wallCollision(pivot, arena, direction):
     new_move = (pivot.position[0] + moves[direction][0], pivot.position[1] + moves[direction][1])
-    if(new_move in game.walls):
+    if(new_move in arena.walls):
         return True
     return False
 
@@ -150,20 +150,20 @@ def checkDotCrossing(pivot, connectPiece, direction, dotsArray):
     return False
 
 
-def endGame(game):
-    algorythms.initSearch(game)
-    algorythms.depth_search(game.pieces[0])
-    for piece in game.pieces:
+def endGame(pieces):
+    algorythms.initSearch(pieces)
+    algorythms.depth_search(pieces[0])
+    for piece in pieces:
         if not piece.visited or piece.avElectrons > 0:
             return False
     return True
 
-def impossible_solution(game):
-    if game.cut_pieces:
+def impossible_solution(pieces, arena):
+    if arena.cut_pieces:
         return False
-    algorythms.initSearch(game)
+    algorythms.initSearch(pieces)
     molecules = []
-    for piece in game.pieces:
+    for piece in pieces:
         if not piece.visited:
             electrons = algorythms.breadth_search(piece)
             molecules.append(electrons)
@@ -172,16 +172,5 @@ def impossible_solution(game):
             return True
     return False
 
-
-def undo(game, direction):
-    game.undo_move()
-    if direction == "right":
-        movePiece(game, "left")
-    elif direction == "left":
-        movePiece(game, "right")
-    elif direction == "up":
-        movePiece(game, "down")
-    elif direction == "down":
-        movePiece(game, "up")
 
     

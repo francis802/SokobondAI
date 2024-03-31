@@ -2,7 +2,7 @@ import pygame
 import controller
 from levels import levels
 import view
-from model import Game
+from model import Game, Arena
 from algorythms import DFS, BFS, greedy_search, a_star_search
 import copy
 
@@ -46,6 +46,7 @@ game_started = False
 
 # Player position
 game = None
+arena = None
 prev_states = []
 
 def printMove():
@@ -102,18 +103,21 @@ while running:
                     level_option_selected = (level_option_selected + 1) % len(level_option)
                 if event.key == pygame.K_RETURN and level_option_selected != 0: 
                     if level_option[level_option_selected] == "Level 1":
-                        game = Game(levels[1]) 
+                        arena = Arena(levels[1])
                     elif level_option[level_option_selected] == "Level 2":
-                        game = Game(levels[2]) 
+                        arena = Arena(levels[2])
                     elif level_option[level_option_selected] == "Level 3":
-                        game = Game(levels[3]) 
+                        arena = Arena(levels[3])
                     elif level_option[level_option_selected] == "Level 4":
-                        game = Game(levels[4])
+                        arena = Arena(levels[4])
                     elif level_option[level_option_selected] == "Level 5":
-                        game = Game(levels[5])  
+                        arena = Arena(levels[5])
+                    game = Game(arena)
                     level_menu = False
                     game_started = True
-                    prev_states.append(copy.deepcopy(game))
+                    prev_states.append(copy.deepcopy(game.pieces))
+                    #algo = a_star_search(game)
+                    #algo.print_solution()
                     
             else:
                 if event.key in (pygame.K_s, pygame.K_DOWN):
@@ -126,17 +130,17 @@ while running:
                     controller.movePiece(game, "right", prev_states)
                    
                 if event.key == pygame.K_r:
-                    game = Game(levels[level_option_selected])
+                    game = Game(arena)
                 if event.key == pygame.K_z:
                     if len(prev_states) > 0:
-                        last_move = prev_states.pop()
-                        game = last_move
+                        last_state = prev_states.pop()
+                        game.pieces = last_state
 
     
     view.display(screen, game, game_name, symbol_font, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started, level_option, level_option_selected, level_menu, menu_ia, menu_ia_selected, menu_ia_options)
     dt = clock.tick(60) / 1000
     
-    if (game_started and controller.endGame(game)):
+    if (game_started and controller.endGame(game.pieces)):
         running = False
         break
 

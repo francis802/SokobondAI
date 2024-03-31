@@ -2,8 +2,8 @@ from model import TreeNode, GameState, Game
 from collections import deque
 from heapq import heappush, heappop
 
-def initSearch(game):
-    for piece in game.pieces:
+def initSearch(pieces):
+    for piece in pieces:
         piece.visited = False
     return
 
@@ -49,8 +49,9 @@ def noWallBetween(game, piece1, piece2):
 
 
 # This function will return the minimum distance between the molecule and the nearst atom
-def proximityMeasure(game):
+def heuristic(pieces):
     # See in connections of the pivot atom whish has the minimum distance to some atom
+    '''
     minDistance = 100000000
     pivot = game.pieces[0]
     molecule = pivot
@@ -78,13 +79,15 @@ def proximityMeasure(game):
     #print("Near: ", near.position)
     
     return minDistance - 1
+    '''
+    return 0
 
 
 # Algorithm for GameState
 
 def BFS(game: Game):
     visited = []
-    root = TreeNode(GameState(game))
+    root = TreeNode(GameState(game.pieces, game.arena))
     queue = deque([root])
 
     while queue:
@@ -104,7 +107,7 @@ def BFS(game: Game):
 
 def DFS(game: Game):
     visited = []
-    root = TreeNode(GameState(game))
+    root = TreeNode(GameState(game.pieces, game.arena))
     stack = [root]
 
     while stack:
@@ -125,8 +128,8 @@ def DFS(game: Game):
 
 
 def greedy_search(game: Game):
-        root = TreeNode(GameState(game))
-        root.heuristicVal = proximityMeasure(root.state.game)
+        root = TreeNode(GameState(game.pieces, game.arena))
+        root.heuristicVal = heuristic(root.state.pieces)
         priorityQueue = [] 
         heappush(priorityQueue, (root.heuristicVal, root))
         filtered_states = []
@@ -138,7 +141,7 @@ def greedy_search(game: Game):
                 return node
 
             children = node.state.childrenStates()
-            evaluated_children = [(proximityMeasure(child[1].game), child) for child in children]
+            evaluated_children = [(heuristic(child[1].pieces), child) for child in children]
 
             for (value, child) in evaluated_children:
                 if child in filtered_states:
@@ -157,8 +160,8 @@ def greedy_search(game: Game):
 
 
 def a_star_search(game: Game):
-        root = TreeNode(GameState(game))
-        root.heuristicVal = proximityMeasure(root.state.game)
+        root = TreeNode(GameState(game.pieces, game.arena))
+        root.heuristicVal = heuristic(root.state.pieces)
         priorityQueue = [] 
         heappush(priorityQueue, (root.heuristicVal, root))
         filtered_states = []
@@ -170,7 +173,7 @@ def a_star_search(game: Game):
                 return node
 
             children = node.state.childrenStates()
-            evaluated_children = [(proximityMeasure(child[1].game) + node.depth, child) for child in children]
+            evaluated_children = [(heuristic(child[1].pieces) + node.depth, child) for child in children]
 
             for (value, child) in evaluated_children:
                 if child in filtered_states:

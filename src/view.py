@@ -54,10 +54,10 @@ def drawMenu(screen, game_name, game_name_font, menu_options, menu_options_font,
 
 def drawGame(screen, game, symbol_font):
         
-        for wall in game.walls:
+        for wall in game.arena.walls:
             pygame.draw.rect(screen, grey, (wall[1] * 100, wall[0] * 100, 100, 100))
         
-        for cut_piece in game.cut_pieces:
+        for cut_piece in game.arena.cut_pieces:
             pygame.draw.circle(screen, red, (cut_piece[1] * 100, cut_piece[0] * 100), 10)
             pygame.draw.line(screen, black, (cut_piece[1] * 100 - 5, cut_piece[0] * 100), (cut_piece[1] * 100 + 5, cut_piece[0] * 100), 2)
 

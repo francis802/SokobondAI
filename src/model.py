@@ -16,29 +16,12 @@ class Piece:
             self.visited = False
             
     
-
-
-class Game:
+class Arena:
     def __init__(self, level):
         self.board = level["board"]
         self.player_pos = level["player_pos"]
-        self.pieces = self.listPieces()
         self.walls = self.listWalls()
         self.cut_pieces = level["cut_pieces"]
-        self.Connections()
-        self.moves = [(piece.connections.copy(), piece.position) for piece in self.pieces]
-
-    def listPieces(self):
-        pieces = []
-        for rowIndex, row in enumerate(self.board):
-            for colIndex, cell in enumerate(row):
-                if cell in atoms:
-                    piece = Piece(cell, (rowIndex, colIndex), valenceElectrons[cell])
-                    if piece.position != self.player_pos:
-                        pieces.append(piece)
-                    else:
-                        pieces.insert(0, piece)
-        return pieces
     
     def listWalls(self):
         walls = []
@@ -47,6 +30,24 @@ class Game:
                 if cell not in atoms and cell is not None:
                     walls.append((rindex, colindex))
         return walls
+
+class Game:
+    def __init__(self, arena: Arena):
+        self.arena = arena
+        self.pieces = self.listPieces()
+        self.Connections()
+
+    def listPieces(self):
+        pieces = []
+        for rowIndex, row in enumerate(self.arena.board):
+            for colIndex, cell in enumerate(row):
+                if cell in atoms:
+                    piece = Piece(cell, (rowIndex, colIndex), valenceElectrons[cell])
+                    if piece.position != self.arena.player_pos:
+                        pieces.append(piece)
+                    else:
+                        pieces.insert(0, piece)
+        return pieces
 
 
     def Connections(self):
@@ -58,72 +59,62 @@ class Game:
                         self.pieces[i].avElectrons -= 1
                         self.pieces[j].connections.append(self.pieces[i])
                         self.pieces[j].avElectrons -= 1
-
-    def undo_move(self):
-        if self.moves:
-            previous_state = self.moves.pop()
-            for index, (connections, position) in enumerate(previous_state):
-                #self.pieces[index].position = position
-                avElectrons = abs(len(connections) - len(self.pieces[index].connections))
-                print("AvElectrons: ", avElectrons)
-                if avElectrons > 0:
-                    self.pieces[index].avElectrons += avElectrons
-                    self.pieces[index].connections = connections
                 
 
 
 class GameState:
-    def __init__(self, game):
-        self.game = game
+    def __init__(self, pieces, arena):
+        self.pieces = pieces
+        self.arena = arena
 
     def __eq__(self, other):
         return isinstance(other, GameState) and self.comparePieces(other)
 
     def comparePieces(self, other):
-        for i in range(len(self.game.pieces)):
-            if self.game.pieces[i].atom != other.game.pieces[i].atom or self.game.pieces[i].position != other.game.pieces[i].position or self.game.pieces[i].avElectrons != other.game.pieces[i].avElectrons:
+        for i in range(len(self.pieces)):
+            if self.pieces[i].atom != other.pieces[i].atom or self.pieces[i].position != other.pieces[i].position or self.pieces[i].avElectrons != other.pieces[i].avElectrons:
                 return False
-            if len(self.game.pieces[i].connections) != len(other.game.pieces[i].connections):
+            if len(self.pieces[i].connections) != len(other.pieces[i].connections):
                 return False
-            for j in range(len(self.game.pieces[i].connections)):
-                if self.game.pieces[i].connections[j].position != other.game.pieces[i].connections[j].position:
+            for j in range(len(self.pieces[i].connections)):
+                if self.pieces[i].connections[j].position != other.pieces[i].connections[j].position:
                     return False
         return True
 
     def __hash__(self):
-        return hash(str(self.game.pieces))
+        return hash(str(self.pieces))
 
     def __str__(self):
-        return "GameState(" + str(self.game.pieces) + ")"
+        return "GameState(" + str(self.pieces) + ")"
 
     def __repr__(self):
         return str(self)
     
     def valid_gamestate(self, direction):
-        return controller.validateMove(self.game, direction)
+        return controller.validateMove(self.pieces, direction, self.arena)
     
     def move_left(self):
         if self.valid_gamestate("left"):
-            state = GameState(controller.changeState(copy.deepcopy(self.game), "left"))
-            if not controller.impossible_solution(state.game):
+            state = GameState(controller.changeState(copy.deepcopy(self.pieces), "left", self.arena), self.arena)
+            if not controller.impossible_solution(state.pieces, state.arena):
                 return state
     
     def move_right(self):
         if self.valid_gamestate("right"):
-            state = GameState(controller.changeState(copy.deepcopy(self.game), "right"))
-            if not controller.impossible_solution(state.game):
+            state = GameState(controller.changeState(copy.deepcopy(self.pieces), "right", self.arena), self.arena)
+            if not controller.impossible_solution(state.pieces, state.arena):
                 return state
     
     def move_up(self):
         if self.valid_gamestate("up"):
-            state = GameState(controller.changeState(copy.deepcopy(self.game), "up"))
-            if not controller.impossible_solution(state.game):
+            state = GameState(controller.changeState(copy.deepcopy(self.pieces), "up", self.arena), self.arena)
+            if not controller.impossible_solution(state.pieces, state.arena):
                 return state
     
     def move_down(self):
         if self.valid_gamestate("down"):
-            state = GameState(controller.changeState(copy.deepcopy(self.game), "down"))
-            if not controller.impossible_solution(state.game):
+            state = GameState(controller.changeState(copy.deepcopy(self.pieces), "down", self.arena), self.arena)
+            if not controller.impossible_solution(state.pieces, state.arena):
                 return state
     
     def childrenStates(self):
@@ -136,7 +127,7 @@ class GameState:
         return children
 
     def check_win(self):
-        return controller.endGame(self.game)
+        return controller.endGame(self.pieces)
     
 
 class TreeNode:
