@@ -40,6 +40,11 @@ menu_ia_options = ["Play", "IA Play"]
 menu_ia_selected = 0
 menu_ia = False
 
+#Algorithm Options
+algorithm_options = ["DFS", "BFS", "Greedy", "A*"]
+algorithm_selected = 0
+algorithm_menu = False
+
 # Variable to track if the game has started
 game_started = False
 
@@ -61,7 +66,7 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.KEYDOWN:
-            if not game_started and not level_menu and not menu_ia:
+            if not game_started and not level_menu and not menu_ia and not algorithm_menu:
                 if event.key in (pygame.K_w, pygame.K_UP):
                     menu_option_selected = (menu_option_selected - 1) % len(menu_options)
                 if event.key in (pygame.K_s, pygame.K_DOWN):
@@ -94,8 +99,24 @@ while running:
                     if menu_ia_options[menu_ia_selected] == "Play":
                         level_menu = True
                     elif menu_ia_options[menu_ia_selected] == "IA Play":
-                        level_menu = True
+                        algorithm_menu = True
                     menu_ia = False
+            elif algorithm_menu:
+                if event.key in (pygame.K_w, pygame.K_UP):
+                    algorithm_selected = (algorithm_selected - 1) % len(algorithm_options)
+                if event.key in (pygame.K_s, pygame.K_DOWN):
+                    algorithm_selected = (algorithm_selected + 1) % len(algorithm_options)
+                if event.key == pygame.K_RETURN: 
+                    if algorithm_options[algorithm_selected] == "DFS":
+                        #Opens the levels just for test the funcionality
+                        level_menu = True
+                    elif algorithm_options[algorithm_selected] == "BFS":
+                        level_menu = True
+                    elif algorithm_options[algorithm_selected] == "Greedy":
+                        level_menu = True
+                    elif algorithm_options[algorithm_selected] == "A*":
+                        level_menu = True
+                    algorithm_menu = False
             elif level_menu:
                 if event.key in (pygame.K_w, pygame.K_UP):
                     level_option_selected = (level_option_selected - 1) % len(level_option)
@@ -137,7 +158,7 @@ while running:
                         game.pieces = last_state
 
     
-    view.display(screen, game, game_name, symbol_font, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started, level_option, level_option_selected, level_menu, menu_ia, menu_ia_selected, menu_ia_options)
+    view.display(screen, game, game_name, symbol_font, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started, level_option, level_option_selected, level_menu, menu_ia, menu_ia_selected, menu_ia_options, algorithm_menu, algorithm_options, algorithm_selected)
     dt = clock.tick(60) / 1000
     
     if (game_started and controller.endGame(game.pieces)):

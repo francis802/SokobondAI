@@ -27,15 +27,17 @@ COLORS = {
 }
 
 
-def display(screen, game, game_name, symbol_font, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started, level_option, level_option_selected, level_menu, menu_ia, menu_ia_selected, menu_ia_options):
+def display(screen, game, game_name, symbol_font, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started, level_option, level_option_selected, level_menu, menu_ia, menu_ia_selected, menu_ia_options, algorithm_menu, algorithm_options, algorithm_selected):
     screen.fill("grey")
     
-    if not game_started and not level_menu and not menu_ia: 
+    if not game_started and not level_menu and not menu_ia and not algorithm_menu: 
         drawMenu(screen, game_name, game_name_font, menu_options, menu_options_font, menu_option_selected)
     elif level_menu:
         drawMenuLevels(screen, game_name, game_name_font, level_option, menu_options_font, level_option_selected)
     elif menu_ia:
         drawMenuIA(screen, game_name, game_name_font, menu_ia_options, menu_options_font, menu_ia_selected)
+    elif algorithm_menu:
+        drawoptionsIA(screen, game_name, game_name_font, algorithm_options, menu_options_font, algorithm_selected)
     else:
         drawGame(screen, game, symbol_font)
 
@@ -160,5 +162,21 @@ def drawMenuIA(screen, game_name, game_name_font, menu_ia_options, menu_options_
         option = menu_options_font.render(option, True, "black")
         highlighted = option.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 + i * 50))
         if i == menu_ia_selected:
+            pygame.draw.rect(screen, "orange", highlighted.inflate(20, 10))  # The rectangle shows in the option selected
+        screen.blit(option, highlighted)
+        
+        
+#Menu to select how to play 
+def drawoptionsIA(screen, game_name, game_name_font, algorithm_options, menu_options_font, algorithm_selected):
+    # Draw the game name
+    game_name_surface = game_name_font.render(game_name, True, "black")
+    game_name_pos = game_name_surface.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 - 200))
+    screen.blit(game_name_surface, game_name_pos)
+
+    # Draw Options
+    for i, option in enumerate(algorithm_options):
+        option = menu_options_font.render(option, True, "black")
+        highlighted = option.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 + i * 50))
+        if i == algorithm_selected:
             pygame.draw.rect(screen, "orange", highlighted.inflate(20, 10))  # The rectangle shows in the option selected
         screen.blit(option, highlighted)
