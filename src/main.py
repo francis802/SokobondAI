@@ -4,6 +4,7 @@ from levels import levels
 import view
 from model import Game
 from algorythms import DFS, BFS, greedy_search, a_star_search
+import copy
 
 # ATENTION: The y axis is turned upside down, so to go up you have to subtract 1, and add 1 to go down!!!
 
@@ -45,6 +46,15 @@ game_started = False
 
 # Player position
 game = None
+restart = game
+moves = []
+
+def printMove():
+    print("Moves: [")
+    for move in moves:
+        lista = [(piece.connections.copy(), piece.position) for piece in move.pieces]
+        print(",  ", lista)
+    print("]")
 
 while running:
     for event in pygame.event.get():
@@ -104,16 +114,54 @@ while running:
                         game = Game(levels[5])  
                     level_menu = False
                     game_started = True
+                    restart = copy.deepcopy(game)
+                    moves.append(restart)
+                    lista1 = [(piece.connections.copy(), piece.position) for piece in moves[-1].pieces]
+                    print("First Move List: ", lista1)
                     
             else:
                 if event.key in (pygame.K_s, pygame.K_DOWN):
                     controller.movePiece(game, "down")
+                    moves.append(copy.deepcopy(game))
+                    printMove()
                 if event.key in (pygame.K_w, pygame.K_UP):
                     controller.movePiece(game, "up")
+                    moves.append(copy.deepcopy(game))
+                    printMove()
                 if event.key in (pygame.K_a, pygame.K_LEFT):
                     controller.movePiece(game, "left")
+                    moves.append(copy.deepcopy(game))
+                    printMove()
                 if event.key in (pygame.K_d, pygame.K_RIGHT):
                     controller.movePiece(game, "right")
+                    moves.append(copy.deepcopy(game))
+                    printMove()
+                   
+                if event.key == pygame.K_q:
+                    game = Game(levels[level_option_selected])
+                if event.key == pygame.K_z:
+                    
+                    #lista2 = [(piece.connections.copy(), piece.position) for piece in moves[-1].pieces]
+                    #print("Last Move Pieces: ", lista2)
+                    print("--------- UNDO MOVE ---------")
+                    printMove()
+                    moves.pop()
+                    
+                    if len(moves) > 0:
+                        print("Moves: ", moves) 
+                        print( "Len: ", len(moves))
+                        print("--------- POP CURRENT MOVE ---------")
+                        printMove()
+                        last_move = moves.pop()
+                        game = last_move
+                        print("--------- POP LAST MOVE ---------")
+                        printMove()
+                    else:
+                        game = restart
+                        moves.append(copy.deepcopy(game))
+
+                    
+                    
     
     view.display(screen, game, game_name, symbol_font, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started, level_option, level_option_selected, level_menu, menu_ia, menu_ia_selected, menu_ia_options)
     dt = clock.tick(60) / 1000
@@ -123,3 +171,5 @@ while running:
         break
 
 pygame.quit()
+
+

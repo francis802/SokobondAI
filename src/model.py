@@ -14,6 +14,7 @@ class Piece:
             self.avElectrons = avElectrons
             self.connections = []
             self.visited = False
+            
     
 
 
@@ -25,6 +26,7 @@ class Game:
         self.walls = self.listWalls()
         self.cut_pieces = level["cut_pieces"]
         self.Connections()
+        self.moves = [(piece.connections.copy(), piece.position) for piece in self.pieces]
 
     def listPieces(self):
         pieces = []
@@ -56,6 +58,18 @@ class Game:
                         self.pieces[i].avElectrons -= 1
                         self.pieces[j].connections.append(self.pieces[i])
                         self.pieces[j].avElectrons -= 1
+
+    def undo_move(self):
+        if self.moves:
+            previous_state = self.moves.pop()
+            for index, (connections, position) in enumerate(previous_state):
+                #self.pieces[index].position = position
+                avElectrons = abs(len(connections) - len(self.pieces[index].connections))
+                print("AvElectrons: ", avElectrons)
+                if avElectrons > 0:
+                    self.pieces[index].avElectrons += avElectrons
+                    self.pieces[index].connections = connections
+                
 
 
 class GameState:

@@ -12,6 +12,7 @@ def movePiece(game, direction):
         return
     
     changeState(game, direction)
+    
 
 def changeState(game, direction):
     algorythms.initSearch(game)
@@ -167,3 +168,17 @@ def impossible_solution(game):
         if electrons == 0 and len(molecules) > 1:
             return True
     return False
+
+
+def undo(game, direction):
+    game.undo_move()
+    if direction == "right":
+        movePiece(game, "left")
+    elif direction == "left":
+        movePiece(game, "right")
+    elif direction == "up":
+        movePiece(game, "down")
+    elif direction == "down":
+        movePiece(game, "up")
+
+    
