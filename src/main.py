@@ -46,12 +46,11 @@ game_started = False
 
 # Player position
 game = None
-restart = game
-moves = []
+prev_states = []
 
 def printMove():
     print("Moves: [")
-    for move in moves:
+    for move in prev_states:
         lista = [(piece.connections.copy(), piece.position) for piece in move.pieces]
         print(",  ", lista)
     print("]")
@@ -114,54 +113,25 @@ while running:
                         game = Game(levels[5])  
                     level_menu = False
                     game_started = True
-                    restart = copy.deepcopy(game)
-                    moves.append(restart)
-                    lista1 = [(piece.connections.copy(), piece.position) for piece in moves[-1].pieces]
-                    print("First Move List: ", lista1)
+                    prev_states.append(copy.deepcopy(game))
                     
             else:
                 if event.key in (pygame.K_s, pygame.K_DOWN):
-                    controller.movePiece(game, "down")
-                    moves.append(copy.deepcopy(game))
-                    printMove()
+                    controller.movePiece(game, "down", prev_states)
                 if event.key in (pygame.K_w, pygame.K_UP):
-                    controller.movePiece(game, "up")
-                    moves.append(copy.deepcopy(game))
-                    printMove()
+                    controller.movePiece(game, "up", prev_states)
                 if event.key in (pygame.K_a, pygame.K_LEFT):
-                    controller.movePiece(game, "left")
-                    moves.append(copy.deepcopy(game))
-                    printMove()
+                    controller.movePiece(game, "left", prev_states)
                 if event.key in (pygame.K_d, pygame.K_RIGHT):
-                    controller.movePiece(game, "right")
-                    moves.append(copy.deepcopy(game))
-                    printMove()
+                    controller.movePiece(game, "right", prev_states)
                    
-                if event.key == pygame.K_q:
+                if event.key == pygame.K_r:
                     game = Game(levels[level_option_selected])
                 if event.key == pygame.K_z:
-                    
-                    #lista2 = [(piece.connections.copy(), piece.position) for piece in moves[-1].pieces]
-                    #print("Last Move Pieces: ", lista2)
-                    print("--------- UNDO MOVE ---------")
-                    printMove()
-                    moves.pop()
-                    
-                    if len(moves) > 0:
-                        print("Moves: ", moves) 
-                        print( "Len: ", len(moves))
-                        print("--------- POP CURRENT MOVE ---------")
-                        printMove()
-                        last_move = moves.pop()
+                    if len(prev_states) > 0:
+                        last_move = prev_states.pop()
                         game = last_move
-                        print("--------- POP LAST MOVE ---------")
-                        printMove()
-                    else:
-                        game = restart
-                        moves.append(copy.deepcopy(game))
 
-                    
-                    
     
     view.display(screen, game, game_name, symbol_font, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started, level_option, level_option_selected, level_menu, menu_ia, menu_ia_selected, menu_ia_options)
     dt = clock.tick(60) / 1000

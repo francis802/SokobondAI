@@ -1,15 +1,18 @@
 import algorythms
+import copy
 
 
 # ATENTION: The y axis is turned upside down, so to go up you have to subtract 1, and add 1 to go down!!!
 moves = {"right": (0,1), "left": (0,-1), "up": (-1,0), "down": (1,0)}
 
-def movePiece(game, direction):
+def movePiece(game, direction, prev_states):
     if direction not in moves.keys():
         raise ValueError("Invalid direction")
     
     if validateMove(game, direction) == False:
         return
+    
+    prev_states.append(copy.deepcopy(game))
     
     changeState(game, direction)
     
