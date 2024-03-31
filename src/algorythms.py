@@ -168,3 +168,31 @@ def a_star_search(game: Game):
                 heappush(priorityQueue, (value, child_tree))
 
         return None
+
+def depth_limited_search(game: Game, depth: int):
+    visited = []
+    root = TreeNode(GameState(game.pieces, game.arena))
+    stack = [root]
+
+    while stack:
+        node = stack.pop()  
+        node.treeDepth()
+        if node.state.check_win():
+            return node
+        
+        if node not in visited and node.depth < depth:
+            visited.append(node)
+            for state in node.state.childrenStates():
+                leaf = TreeNode(state[1])
+                leaf.prev_move = state[0]
+                node.add_child(leaf)
+                stack.append(leaf)
+    return None
+
+def iterative_deepening_search(game: Game):
+    depth = 1
+    while True:
+        result = depth_limited_search(game, depth)
+        if result:
+            return result
+        depth += 1

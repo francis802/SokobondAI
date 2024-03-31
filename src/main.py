@@ -3,7 +3,7 @@ import controller
 from levels import levels
 import view
 from model import Game, Arena
-from algorythms import DFS, BFS, greedy_search, a_star_search
+from algorythms import DFS, BFS, greedy_search, a_star_search, iterative_deepening_search
 import copy
 
 # ATENTION: The y axis is turned upside down, so to go up you have to subtract 1, and add 1 to go down!!!
@@ -149,7 +149,7 @@ while running:
                     level_menu = False
                     game_started = True
                     prev_states.append(copy.deepcopy(game.pieces))
-                    algo = BFS(game)
+                    algo = iterative_deepening_search(game)
                     algo.print_solution()
                     
             else:
