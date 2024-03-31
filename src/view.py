@@ -9,6 +9,12 @@ yellow = (255, 255, 0)
 grey = (128,128,128)
 black = (0,0,0)
 
+#Dimensions
+SQUARE_SIZE = 80
+PIECE_SIZE = 35
+CUT_PIECE_SIZE = 8
+ELECTRON_SIZE = 8
+
 # Board colors
 COLORS = {
     'H': red,
@@ -55,35 +61,35 @@ def drawMenu(screen, game_name, game_name_font, menu_options, menu_options_font,
 def drawGame(screen, game, symbol_font):
         
         for wall in game.arena.walls:
-            pygame.draw.rect(screen, grey, (wall[1] * 100, wall[0] * 100, 100, 100))
+            pygame.draw.rect(screen, grey, (wall[1] * SQUARE_SIZE, wall[0] * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
         
         for cut_piece in game.arena.cut_pieces:
-            pygame.draw.circle(screen, red, (cut_piece[1] * 100, cut_piece[0] * 100), 10)
-            pygame.draw.line(screen, black, (cut_piece[1] * 100 - 5, cut_piece[0] * 100), (cut_piece[1] * 100 + 5, cut_piece[0] * 100), 2)
+            pygame.draw.circle(screen, red, (cut_piece[1] * SQUARE_SIZE, cut_piece[0] * SQUARE_SIZE), CUT_PIECE_SIZE)
+            pygame.draw.line(screen, black, (cut_piece[1] * SQUARE_SIZE - 5, cut_piece[0] * SQUARE_SIZE), (cut_piece[1] * SQUARE_SIZE + 5, cut_piece[0] * SQUARE_SIZE), 2)
 
         for index, piece in enumerate(game.pieces):
             # Draw connections:
                 for connection in piece.connections:
-                    pygame.draw.line(screen, (0,0,0), (piece.position[1] * 100 + 50, piece.position[0] * 100 + 50), (connection.position[1] * 100 + 50, connection.position[0] * 100 + 50), 5)    
+                    pygame.draw.line(screen, (0,0,0), (piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2), (connection.position[1] * SQUARE_SIZE + SQUARE_SIZE/2, connection.position[0] * SQUARE_SIZE + SQUARE_SIZE/2), 5)    
 
             # Draw the piece:
-                pygame.draw.circle(screen, COLORS[piece.atom], (piece.position[1] * 100 + 50, piece.position[0] * 100 + 50), 40)
-                pygame.draw.circle(screen, black, (piece.position[1] * 100 + 50, piece.position[0] * 100 + 50), 40, 5)
+                pygame.draw.circle(screen, COLORS[piece.atom], (piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2), PIECE_SIZE)
+                pygame.draw.circle(screen, black, (piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2), PIECE_SIZE, 5)
                 text_surface = symbol_font.render(piece.atom, True, (0,0,0))
-                text_rect = text_surface.get_rect(center=(piece.position[1] * 100 + 50, piece.position[0] * 100 + 50))
+                text_rect = text_surface.get_rect(center=(piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2))
                 screen.blit(text_surface, text_rect)
 
             # Draw avElectrons:
                 for electrons in range(piece.avElectrons):
                     angle = (360 / piece.avElectrons) * electrons
                     # Calcular a posição relativa do elétron de valência em relação ao átomo
-                    relative_x = int(pygame.math.Vector2(39, 0).rotate(angle).x)
-                    relative_y = int(pygame.math.Vector2(39, 0).rotate(angle).y)
+                    relative_x = int(pygame.math.Vector2(35, 0).rotate(angle).x)
+                    relative_y = int(pygame.math.Vector2(35, 0).rotate(angle).y)
                     # Calcular a posição absoluta do elétron de valência em relação à tela
-                    x = piece.position[1] * 100 + 50 + relative_x
-                    y = piece.position[0] * 100 + 50 + relative_y
-                    pygame.draw.circle(screen, white, (x , y), 10)
-                    pygame.draw.circle(screen, (0,0,0), (x, y), 10, 5)
+                    x = piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2 + relative_x
+                    y = piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2 + relative_y
+                    pygame.draw.circle(screen, white, (x , y), ELECTRON_SIZE)
+                    pygame.draw.circle(screen, (0,0,0), (x, y), ELECTRON_SIZE, 5)
             
 # Menu to select the level
 def drawMenuLevels(screen, game_name, game_name_font, level_option, menu_options_font, level_option_selected):

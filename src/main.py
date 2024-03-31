@@ -116,7 +116,7 @@ while running:
                     level_menu = False
                     game_started = True
                     prev_states.append(copy.deepcopy(game.pieces))
-                    #algo = a_star_search(game)
+                    #algo = greedy_search(game)
                     #algo.print_solution()
                     
             else:
