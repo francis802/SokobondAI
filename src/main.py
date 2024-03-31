@@ -116,8 +116,8 @@ while running:
                     level_menu = False
                     game_started = True
                     prev_states.append(copy.deepcopy(game.pieces))
-                    #algo = greedy_search(game)
-                    #algo.print_solution()
+                    algo = BFS(game)
+                    algo.print_solution()
                     
             else:
                 if event.key in (pygame.K_s, pygame.K_DOWN):

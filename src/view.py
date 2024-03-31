@@ -67,11 +67,10 @@ def drawGame(screen, game, symbol_font):
             pygame.draw.circle(screen, red, (cut_piece[1] * SQUARE_SIZE, cut_piece[0] * SQUARE_SIZE), CUT_PIECE_SIZE)
             pygame.draw.line(screen, black, (cut_piece[1] * SQUARE_SIZE - 5, cut_piece[0] * SQUARE_SIZE), (cut_piece[1] * SQUARE_SIZE + 5, cut_piece[0] * SQUARE_SIZE), 2)
 
-        for index, piece in enumerate(game.pieces):
-            # Draw connections:
-                for connection in piece.connections:
-                    pygame.draw.line(screen, (0,0,0), (piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2), (connection.position[1] * SQUARE_SIZE + SQUARE_SIZE/2, connection.position[0] * SQUARE_SIZE + SQUARE_SIZE/2), 5)    
-
+        for piece in game.pieces:
+            for connection in piece.connections:
+                pygame.draw.line(screen, (0,0,0), (piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2), (connection.position[1] * SQUARE_SIZE + SQUARE_SIZE/2, connection.position[0] * SQUARE_SIZE + SQUARE_SIZE/2), 5)
+        for piece in game.pieces:
             # Draw the piece:
                 pygame.draw.circle(screen, COLORS[piece.atom], (piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2), PIECE_SIZE)
                 pygame.draw.circle(screen, black, (piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2), PIECE_SIZE, 5)
