@@ -27,7 +27,7 @@ symbol_font = pygame.font.SysFont("Arial", 50)
 
 
 # The options in the menu
-menu_options = ["start game", "settings", "about", "quit"]
+menu_options = ["start game", "about", "quit"]
 menu_option_selected = 0
 
 #Level Options
@@ -41,7 +41,7 @@ menu_ia_selected = 0
 menu_ia = False
 
 #Algorithm Options
-algorithm_options = ["DFS", "BFS", "Greedy", "A*"]
+algorithm_options = ["DFS", "BFS", "Greedy", "A*", "Iterative Deepening"]
 algorithm_selected = 0
 algorithm_menu = False
 
@@ -116,6 +116,8 @@ while running:
                         level_menu = True
                     elif algorithm_options[algorithm_selected] == "A*":
                         level_menu = True
+                    elif algorithm_options[algorithm_selected] == "Iterative Deepening":
+                        level_menu = True
                     algorithm_menu = False
             elif level_menu:
                 if event.key in (pygame.K_w, pygame.K_UP):
@@ -160,11 +162,15 @@ while running:
     
     view.display(screen, game, game_name, symbol_font, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started, level_option, level_option_selected, level_menu, menu_ia, menu_ia_selected, menu_ia_options, algorithm_menu, algorithm_options, algorithm_selected)
     dt = clock.tick(60) / 1000
-    
-    if (game_started and controller.endGame(game.pieces)):
-        running = False
-        break
 
+    #Handle the end of the game
+    if game_started and controller.endGame(game.pieces):
+        view.drawVictory(screen)  
+        pygame.display.flip()
+        pygame.time.delay(1500)  # Time that show the message "Victory"
+        menu_option_selected = 0  
+        game_started = False 
+        
 pygame.quit()
 
 

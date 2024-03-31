@@ -180,3 +180,11 @@ def drawoptionsIA(screen, game_name, game_name_font, algorithm_options, menu_opt
         if i == algorithm_selected:
             pygame.draw.rect(screen, "orange", highlighted.inflate(20, 10))  # The rectangle shows in the option selected
         screen.blit(option, highlighted)
+
+
+def drawVictory(screen):
+    screen.fill("grey")
+    victory_text = pygame.font.SysFont("Arial", 100).render("Victory!", True, "black")
+    text_rect = victory_text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
+    screen.blit(victory_text, text_rect)
+    pygame.display.flip()  
