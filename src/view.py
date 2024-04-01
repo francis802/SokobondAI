@@ -64,10 +64,12 @@ def display(game, menu_options, menu_option_selected, game_started, level_option
         drawoptionsIA(algorithm_options, algorithm_selected)
     elif game_started:
         drawGame(game)
-    elif about:
-        drawAbout()
     elif heuristics_menu:
         drawMenuHeuristics(heuristics_selected)
+
+    if about:
+
+        drawAbout()
 
     pygame.display.flip()
 
