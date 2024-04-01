@@ -148,6 +148,7 @@ while running:
                         if menu_options[menu_option_selected] == "start game":
                             menu_ia = True
                         elif menu_options[menu_option_selected] == "about":
+                            print("about")
                             about = True
                         elif menu_options[menu_option_selected] == "quit":
                             running = False
