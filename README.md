@@ -48,7 +48,7 @@ We used Python 3 to run the application.
 It was used [Pygame](https://www.pygame.org/news) to display the application.
 You can install it manually with the following command:
 ```bash
-pip install igraph pygame plotly
+pip install pygame
 ```
 
 ## Usage
