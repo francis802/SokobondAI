@@ -27,7 +27,7 @@ COLORS = {
 }
 
 
-def display(screen, game, game_name, symbol_font, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started, level_option, level_option_selected, level_menu, menu_ia, menu_ia_selected, menu_ia_options, algorithm_menu, algorithm_options, algorithm_selected):
+def display(screen, game, game_name, symbol_font, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started, level_option, level_option_selected, level_menu, menu_ia, menu_ia_selected, menu_ia_options, algorithm_menu, algorithm_options, algorithm_selected, about):
     screen.fill("grey")
     
     if not game_started and not level_menu and not menu_ia and not algorithm_menu: 
@@ -38,8 +38,11 @@ def display(screen, game, game_name, symbol_font, game_name_font, menu_options, 
         drawMenuIA(screen, game_name, game_name_font, menu_ia_options, menu_options_font, menu_ia_selected)
     elif algorithm_menu:
         drawoptionsIA(screen, game_name, game_name_font, algorithm_options, menu_options_font, algorithm_selected)
-    else:
+    elif game_started:
         drawGame(screen, game, symbol_font)
+
+    if about:
+        drawAbout(screen, game_name, game_name_font)
 
     pygame.display.flip()
 
@@ -195,3 +198,52 @@ def drawVictory(screen):
     text_rect = victory_text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
     screen.blit(victory_text, text_rect)
     pygame.display.flip()  
+
+
+
+def drawAbout(screen, game_name, game_name_font):
+    screen.fill("grey")
+
+    # Draw the game name
+    game_name_surface = game_name_font.render(game_name, True, "black")
+    game_name_pos = game_name_surface.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 - 200))
+    screen.blit(game_name_surface, game_name_pos)
+
+    about_text = (
+        "...is an elegantly designed puzzle game about chemistry. It's logical, minimalist, and beautiful."
+    )
+    bout = pygame.font.SysFont("Arial", 25).render(about_text, True, "black")
+    out = bout.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 - 80))
+    screen.blit(bout, out)
+
+    command_text = (
+    "Commands:"
+    "  w - up      z - undo"
+    "  s - down    q - restart"
+    "  a - left"
+    "  d - right"
+    )
+
+    ommand = pygame.font.SysFont("Arial", 25).render("Commands:", True, "black")
+    mmand = bout.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 - 10))
+    screen.blit(ommand, mmand)
+    ommand = pygame.font.SysFont("Arial", 25).render("  w - up      z - undo", True, "black")
+    mmand = bout.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 + 20))
+    screen.blit(ommand, mmand)
+    ommand = pygame.font.SysFont("Arial", 25).render("  s - down    q - restart", True, "black")
+    mmand = bout.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 +50))
+    screen.blit(ommand, mmand)
+    ommand = pygame.font.SysFont("Arial", 25).render("  a - left", True, "black")
+    mmand = bout.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 +80))
+    screen.blit(ommand, mmand)
+    ommand = pygame.font.SysFont("Arial", 25).render("  d - right", True, "black")
+    mmand = bout.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 +110))
+    screen.blit(ommand, mmand)
+    
+
+
+    
+
+
+    pygame.display.flip()
+    
