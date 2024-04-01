@@ -1,4 +1,5 @@
 import pygame
+import math
 
 #Colors
 white = (255, 255, 255)
@@ -46,10 +47,12 @@ def init():
     menu_options_font = pygame.font.SysFont("Arial", 24)
     symbol_font = pygame.font.SysFont("Arial", 50)
 
-def display(game, menu_options, menu_option_selected, game_started, level_option, level_option_selected, level_menu, menu_ia, menu_ia_selected, menu_ia_options, algorithm_menu, algorithm_options, algorithm_selected, about):
+def display(game, menu_options, menu_option_selected, game_started, level_option, level_option_selected, level_menu, menu_ia, menu_ia_selected, menu_ia_options, algorithm_menu, algorithm_options, algorithm_selected, about, victory, time_elapsed, number_moves, heuristics_selected, heuristics_menu):
     screen.fill("grey")
     
-    if not game_started and not level_menu and not menu_ia and not algorithm_menu: 
+    if victory:
+        drawVictory(number_moves, time_elapsed)
+    elif not game_started and not level_menu and not menu_ia and not algorithm_menu and not heuristics_menu: 
         drawMenu(menu_options, menu_option_selected)
     elif level_menu:
         drawMenuLevels(level_option, level_option_selected)
@@ -59,9 +62,10 @@ def display(game, menu_options, menu_option_selected, game_started, level_option
         drawoptionsIA(algorithm_options, algorithm_selected)
     elif game_started:
         drawGame(game)
-
-    if about:
+    elif about:
         drawAbout()
+    elif heuristics_menu:
+        drawMenuHeuristics(heuristics_selected)
 
     pygame.display.flip()
 
@@ -101,10 +105,17 @@ def drawGame(game):
     for piece in game.pieces:
         for connection in piece.connections:
             pygame.draw.line(screen, (0,0,0), (piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2 + horizontal_offset, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2 + vertical_offset), (connection.position[1] * SQUARE_SIZE + SQUARE_SIZE/2 + horizontal_offset, connection.position[0] * SQUARE_SIZE + SQUARE_SIZE/2 + vertical_offset), 5)
-    for piece in game.pieces:
+    for i,piece in enumerate(game.pieces):
         # Desenha a peça:
         pygame.draw.circle(screen, COLORS[piece.atom], (piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2 + horizontal_offset, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2 + vertical_offset), PIECE_SIZE)
-        pygame.draw.circle(screen, black, (piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2 + horizontal_offset, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2 + vertical_offset), PIECE_SIZE, 5)
+        
+        if i == 0:
+            for angle in range(0, 360, 15):
+                start_angle = math.radians(angle)
+                end_angle = math.radians(angle + 10)  # 10 degrees arc, 5 degrees gap
+                pygame.draw.arc(screen, black, (piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2 + horizontal_offset - PIECE_SIZE, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2 + vertical_offset - PIECE_SIZE, 2 * PIECE_SIZE, 2 * PIECE_SIZE), start_angle, end_angle, 4)
+        else:
+            pygame.draw.circle(screen, black, (piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2 + horizontal_offset, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2 + vertical_offset), PIECE_SIZE, 5)
         text_surface = symbol_font.render(piece.atom, True, (0,0,0))
         text_rect = text_surface.get_rect(center=(piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2 + horizontal_offset, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2 + vertical_offset))
         screen.blit(text_surface, text_rect)
@@ -119,7 +130,7 @@ def drawGame(game):
             x = piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2 + relative_x + horizontal_offset
             y = piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2 + relative_y + vertical_offset
             pygame.draw.circle(screen, white, (x , y), ELECTRON_SIZE)
-            pygame.draw.circle(screen, (0,0,0), (x, y), ELECTRON_SIZE, 5)
+            pygame.draw.circle(screen, black, (x, y), ELECTRON_SIZE, 5)
             
 # Menu to select the level
 def drawMenuLevels(level_option, level_option_selected):
@@ -220,22 +231,33 @@ def drawoptionsIA(algorithm_options, algorithm_selected):
 
 def drawVictory(number_moves, time_elapsed):
     screen.fill("grey")
-    font = pygame.font.SysFont("Arial", 50)
+
+    # Create different font objects
+    victory_font = pygame.font.SysFont("Arial", 70)
+    info_font = pygame.font.SysFont("Arial", 40)
 
     # Render the victory text
-    victory_text = font.render("Victory!", True, "black")
+    victory_text = victory_font.render("Victory!", True, "black")
     victory_text_rect = victory_text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2 - 100))
     screen.blit(victory_text, victory_text_rect)
 
     # Render the number of moves
-    moves_text = font.render(f"Number of moves: {number_moves}", True, "black")
+    moves_text = info_font.render(f"Number of moves: {number_moves}", True, "black")
     moves_text_rect = moves_text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
     screen.blit(moves_text, moves_text_rect)
 
     # Render the time elapsed
-    time_text = font.render(f"Time elapsed: {time_elapsed:.3f} seconds", True, "black")
+    time_text = info_font.render(f"Time elapsed: {time_elapsed:.3f} seconds", True, "black")
     time_text_rect = time_text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2 + 100))
     screen.blit(time_text, time_text_rect)
+
+    # Render the return button
+    button_font = pygame.font.SysFont("Arial", 30)
+    button_text = button_font.render("Enter to return", True, "black")
+    button_rect = button_text.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 + 4 * 50))
+    pygame.draw.rect(screen, "orange", button_rect.inflate(20, 10)) 
+    screen.blit(button_text, button_rect)
+
 
     pygame.display.flip()
 
@@ -270,7 +292,7 @@ def drawAbout():
     ommand = pygame.font.SysFont("Arial", 25).render("  w - up      z - undo", True, "black")
     mmand = bout.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 + 20))
     screen.blit(ommand, mmand)
-    ommand = pygame.font.SysFont("Arial", 25).render("  s - down    q - restart", True, "black")
+    ommand = pygame.font.SysFont("Arial", 25).render("  s - down    r - restart", True, "black")
     mmand = bout.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 +50))
     screen.blit(ommand, mmand)
     ommand = pygame.font.SysFont("Arial", 25).render("  a - left", True, "black")
@@ -280,10 +302,38 @@ def drawAbout():
     mmand = bout.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 +110))
     screen.blit(ommand, mmand)
     
+    pygame.display.flip()
+
+
+def displayLoading():
+
+    button_font = pygame.font.SysFont("Arial", 30)
+    button_text = button_font.render("Loading...", True, "black")
+    button_rect = button_text.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 - 30))
+    pygame.draw.rect(screen, "cyan", button_rect.inflate(20, 10)) 
+    screen.blit(button_text, button_rect)
+
+    pygame.display.flip()
+
+
+
+def drawMenuHeuristics(heuristics_selected):
+    h = ["","Heuristic 1: minimize distance between molecule and free atoms", "Heuristic 2: minimize distance between molecule and free atoms with higher number of available electrons"]
+   
+   # Draw the game name
+    game_name_surface = game_name_font.render(game_name, True, "black")
+    game_name_pos = game_name_surface.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 - 200))
+    screen.blit(game_name_surface, game_name_pos)
+
+    # Draw Options
+    for i in range(3):
+        if i == 0: continue
+        option = menu_options_font.render(h[i], True, "black")
+        highlighted = option.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 + i * 50))
+        if i == heuristics_selected :
+            pygame.draw.rect(screen, "orange", highlighted.inflate(20, 10))  # The rectangle shows in the option selected
+        screen.blit(option, highlighted)
 
 
     
-
-
-    pygame.display.flip()
     

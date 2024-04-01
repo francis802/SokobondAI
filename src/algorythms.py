@@ -29,15 +29,24 @@ def breadth_search(piece):
 
 def manhattanDistance(piece1, piece2):
     return abs(piece1.position[0] - piece2.position[0]) + abs(piece1.position[1] - piece2.position[1])
-# This function will return the minimum distance between the molecule and the nearst atom
-def heuristic(pieces):
-    # See in connections of the pivot atom which has the minimum total distance to all atoms
+
+# This function will return the sum of minimum distance between the molecule and the nearst atom
+def heuristic1(pieces):
     totalDistance = 0
     for index, piece in enumerate(pieces):
         if index == 0 or len(piece.connections) > 0:
             continue
         dist = manhattanDistance(pieces[0], piece)
         totalDistance += dist
+    return totalDistance
+
+# This function will return the sum of minimum distance between the molecule and the nearst atom with highest number of available electrons
+def heuristic2(pieces):
+    totalDistance = 0
+    for index, piece in enumerate(pieces):
+        if index == 0 or len(piece.connections) > 0:
+            continue
+        totalDistance += manhattanDistance(pieces[0], piece) * (piece.avElectrons + 1)
     return totalDistance
         
 
@@ -86,7 +95,7 @@ def DFS(game: Game):
 
 
 
-def greedy_search(game: Game):
+def greedy_search(game: Game, heuristic):
         root = TreeNode(GameState(game.pieces, game.arena))
         root.heuristicVal = heuristic(root.state.pieces)
         priorityQueue = [] 
@@ -118,7 +127,7 @@ def greedy_search(game: Game):
         return None
 
 
-def a_star_search(game: Game):
+def a_star_search(game: Game, heuristic):
         root = TreeNode(GameState(game.pieces, game.arena))
         root.heuristicVal = heuristic(root.state.pieces)
         priorityQueue = [] 
