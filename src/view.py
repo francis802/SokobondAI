@@ -218,12 +218,26 @@ def drawoptionsIA(algorithm_options, algorithm_selected):
         screen.blit(option, highlighted)
 
 
-def drawVictory():
+def drawVictory(number_moves, time_elapsed):
     screen.fill("grey")
-    victory_text = pygame.font.SysFont("Arial", 100).render("Victory!", True, "black")
-    text_rect = victory_text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
-    screen.blit(victory_text, text_rect)
-    pygame.display.flip()  
+    font = pygame.font.SysFont("Arial", 50)
+
+    # Render the victory text
+    victory_text = font.render("Victory!", True, "black")
+    victory_text_rect = victory_text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2 - 100))
+    screen.blit(victory_text, victory_text_rect)
+
+    # Render the number of moves
+    moves_text = font.render(f"Number of moves: {number_moves}", True, "black")
+    moves_text_rect = moves_text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
+    screen.blit(moves_text, moves_text_rect)
+
+    # Render the time elapsed
+    time_text = font.render(f"Time elapsed: {time_elapsed:.3f} seconds", True, "black")
+    time_text_rect = time_text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2 + 100))
+    screen.blit(time_text, time_text_rect)
+
+    pygame.display.flip()
 
 
 
