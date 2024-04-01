@@ -94,7 +94,7 @@ def initializeVariables():
     total_moves = 0
 
 
-
+# AI: get the moves from the AI
 def getMoves(state):
     moves = []
     while state.parent != None:
@@ -103,6 +103,7 @@ def getMoves(state):
     return moves
     
 
+# ----------------- MAIN LOOP -----------------
 while running:
     # AI: run the AI
     if menu_ia_selected == 1 and game_started and not ai_done: 

@@ -5,6 +5,7 @@ import copy
 # ATENTION: The y axis is turned upside down, so to go up you have to subtract 1, and add 1 to go down!!!
 moves = {"right": (0,1), "left": (0,-1), "up": (-1,0), "down": (1,0)}
 
+# ----------------- MOVE PIECES FUNCTIONS ----------------- 
 def movePiece(game, direction, prev_states):
     if direction not in moves.keys():
         raise ValueError("Invalid direction")
@@ -36,6 +37,8 @@ def changeState(pieces, direction, arena):
 
     return pieces
 
+# ----------------- HELPER TO MOVE PIECES -----------------
+# See new connections
 def newConnections(pieces):
     for piece in pieces:
         for possibleConnection in pieces:
@@ -46,6 +49,7 @@ def newConnections(pieces):
                 possibleConnection.avElectrons -= 1
     return
 
+# Move adjacent pieces in order to keep the molecule together
 def moveAjacentPiece(pieces, direction, pivot, new_poss):
     for piece in pivot.connections:
         if not piece.visited:
@@ -62,6 +66,7 @@ def moveAjacentPiece(pieces, direction, pivot, new_poss):
             moveAjacentPiece(pieces, direction, piece, new_poss)
     return
 
+# remove connections
 def cutConnections(pivot, direction, arena):
     cutCrossing = []
     for connectedPiece in pivot.connections:
@@ -78,6 +83,7 @@ def cutConnections(pivot, direction, arena):
         cuttedPiece.avElectrons += 1
 
 
+# ----------------- VALIDATE MOVE FUNCTIONS -----------------
 def validateMove(pieces, direction, arena):
     pivot = pieces[0]
     algorythms.initSearch(pieces)
@@ -150,6 +156,7 @@ def checkDotCrossing(pivot, connectPiece, direction, dotsArray):
     return False
 
 
+# ----------------- WINNING VERIFICATION FUNCTION -----------------
 def endGame(pieces):
     algorythms.initSearch(pieces)
     algorythms.depth_search(pieces[0])
@@ -158,6 +165,8 @@ def endGame(pieces):
             return False
     return True
 
+# ----------------- IMPOSSIBLE SOLUTION FUNCTION -----------------
+# This function will return True if from this stage onwards it will not be possible to reach a solution, discarding these branches will help the search algorithms
 def impossible_solution(pieces, arena):
     if arena.cut_pieces:
         return False
