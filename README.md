@@ -2,13 +2,23 @@
 
 Main menu:
 
+![Alt text](images/main_menu.png)
+
 Level menu:
+
+![Alt text](images/level_menu.png)
 
 Game:
 
+![Alt text](images/game.png)
+
 Ai menu:
 
+![Alt text](images/ia_menu.png)
+
 Heuristic menu:
+
+![Alt text](images/heuristic_menu.png)
 
 
 ## Table of Contents
