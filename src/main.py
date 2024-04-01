@@ -193,6 +193,7 @@ while running:
                     if event.key == pygame.K_r:
                         game = Game(arena)
                         prev_states = []
+                        time_start = time.time()
                     if event.key == pygame.K_z:
                         if len(prev_states) > 0:
                             last_state = prev_states.pop()
