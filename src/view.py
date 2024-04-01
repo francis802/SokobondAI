@@ -24,10 +24,29 @@ COLORS = {
     'y': yellow,
     'g': grey,
     None: white
-}
+} 
 
+# Declaração das variáveis globais
+screen = None
+game_name = "SOKOBOND"
+game_name_font = None
+menu_options_font = None
+symbol_font = None
 
-def display(screen, game, game_name, symbol_font, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started, level_option, level_option_selected, level_menu, menu_ia, menu_ia_selected, menu_ia_options, algorithm_menu, algorithm_options, algorithm_selected, about):
+def init():
+    # Declarando as variáveis globais dentro da função
+    global screen
+    global game_name_font
+    global menu_options_font
+    global symbol_font
+
+    # Definindo os valores das variáveis
+    screen = pygame.display.set_mode((1280, 720))
+    game_name_font = pygame.font.SysFont("Arial", 100)
+    menu_options_font = pygame.font.SysFont("Arial", 24)
+    symbol_font = pygame.font.SysFont("Arial", 50)
+
+def display(game, menu_options, menu_option_selected, game_started, level_option, level_option_selected, level_menu, menu_ia, menu_ia_selected, menu_ia_options, algorithm_menu, algorithm_options, algorithm_selected, about):
     screen.fill("grey")
     
     if not game_started and not level_menu and not menu_ia and not algorithm_menu: 
@@ -192,7 +211,7 @@ def drawoptionsIA(screen, game_name, game_name_font, algorithm_options, menu_opt
         screen.blit(option, highlighted)
 
 
-def drawVictory(screen):
+def drawVictory():
     screen.fill("grey")
     victory_text = pygame.font.SysFont("Arial", 100).render("Victory!", True, "black")
     text_rect = victory_text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
@@ -219,7 +238,7 @@ def drawAbout(screen, game_name, game_name_font):
     command_text = (
     "Commands:"
     "  w - up      z - undo"
-    "  s - down    q - restart"
+    "  s - down    r - restart"
     "  a - left"
     "  d - right"
     )

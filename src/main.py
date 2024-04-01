@@ -10,18 +10,10 @@ import copy
 
 # pygame setup
 pygame.init()
-screen = pygame.display.set_mode((1280, 720))
+view.init()
 clock = pygame.time.Clock()
 running = True
 dt = 0
-
-# Game Name
-game_name = "SOKOBOND"
-
-# Fonts
-game_name_font = pygame.font.SysFont("Arial", 100)
-menu_options_font = pygame.font.SysFont("Arial", 24)
-symbol_font = pygame.font.SysFont("Arial", 50)
 
 # The options in the menu
 menu_options = ["start game", "about", "quit"]
@@ -55,16 +47,6 @@ ai_done = False
 ai_moves = []
 
 
-def printMove():
-    print("Moves: [")
-    for move in prev_states:
-        lista = [(piece.connections.copy(), piece.position) for piece in move.pieces]
-        print(",  ", lista)
-    print("]")
-
-def printAI(pieces):
-    lista = [piece.position for piece in pieces]
-    print(lista)
 
 def getMoves(state):
     moves = []
@@ -77,7 +59,6 @@ def getMoves(state):
 while running:
     # AI: run the AI
     if menu_ia_selected == 1 and game_started and not ai_done: 
-        if not ai_done:
             ai_done = True
             if algorithm_selected == 0:
                 ai_result = DFS(game)
@@ -192,7 +173,7 @@ while running:
                             game.pieces = last_state
 
     # VIEW: display the game
-    view.display(screen, game, game_name, symbol_font, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started, level_option, level_option_selected, level_menu, menu_ia, menu_ia_selected, menu_ia_options, algorithm_menu, algorithm_options, algorithm_selected, about)
+    view.display(game, menu_options, menu_option_selected, game_started, level_option, level_option_selected, level_menu, menu_ia, menu_ia_selected, menu_ia_options, algorithm_menu, algorithm_options, algorithm_selected, about)
     dt = clock.tick(60) / 1000
 
     # AI LAST MOVE: handle the last move of the AI
@@ -201,7 +182,7 @@ while running:
 
     # VICTORY: handle the end of the game
     if game_started and controller.endGame(game.pieces):
-        view.drawVictory(screen)  
+        view.drawVictory()  
         pygame.display.flip()
         menu_option_selected = 0
         level_option_selected = 0

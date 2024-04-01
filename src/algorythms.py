@@ -27,26 +27,6 @@ def breadth_search(piece):
     return electrons
             
 
-
-def distance(piece1, piece2):
-    return abs(piece1.position[0] - piece2.position[0]) + abs(piece1.position[1] - piece2.position[1])
-
-def noWallBetween(game, piece1, piece2):
-    # print("Checking: ", piece1.position, piece2.position)
-    if piece1.position[0] == piece2.position[0]:
-        for i in range(min(piece1.position[1], piece2.position[1]), max(piece1.position[1], piece2.position[1])):
-            print("Checking: ", (piece1.position[0], i))
-            if (piece1.position[0], i) in game.walls:
-                return False
-    if piece1.position[1] == piece2.position[1]:
-        for i in range(min(piece1.position[0], piece2.position[0]), max(piece1.position[0], piece2.position[0])):
-            print("Checking: ", (i, piece1.position[1]))
-            if (i, piece1.position[1]) in game.walls:
-                return False
-    # print("No wall between")
-    # print ("------------------------------------------")
-    return True
-
 def manhattanDistance(piece1, piece2):
     return abs(piece1.position[0] - piece2.position[0]) + abs(piece1.position[1] - piece2.position[1])
 # This function will return the minimum distance between the molecule and the nearst atom
