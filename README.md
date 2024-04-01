@@ -1,7 +1,6 @@
 # Sokobond - Artificial Intelligence Implementation
 
 Main menu:
-![Cohesion](/Project%201/images/cohesion.png)
 
 Level menu:
 
@@ -14,7 +13,6 @@ Heuristic menu:
 
 ## Table of Contents
 
-- [Game Definition](#game-definition)
 - [Setup](#setup)
 - [Usage](#usage)
 - [Files](#files)
@@ -26,17 +24,13 @@ Heuristic menu:
     - [algorithms.py](#algorithmspy)
         - [TreeNodes](#treenodes)
         - [MutualFunction](#mutualfunction)
-        - [BFS](#bfs)
         - [DFS](#dfs)
+        - [BFS](#bfs)
         - [GREEDY](#greedy)
         - [ASTAR](#astar)
 
 
 ---
-
-## Game Definition 
-
-The game [Cohesion Free](https://play.google.com/store/apps/details?id=com.NeatWits.CohesionFree&hl=en&gl=US) is a one-player game played on a pre-generated board with four different colors. The game starts with a scrambled board, and the player must slide tiles to form larger clusters of tiles of the same color. The game ends when the player wins by having only a single cluster of each color.
 
 ## Setup
 
@@ -292,6 +286,31 @@ def impossible_solution(pieces, arena):
 ```
 
 ### algorithms\.py
+This file contains the implementation of the functions corresponding to the algorithms chosen to be part of this project.
+#### DFS
+```python
+def DFS(game: Game):
+    visited = []
+    root = TreeNode(GameState(game.pieces, game.arena))
+    stack = [root]
+
+    while stack:
+        node = stack.pop()  
+        node.treeDepth()
+        if node.state.check_win():
+            return node
+        
+        if node not in visited:
+            visited.append(node)
+            for state in node.state.childrenStates():
+                leaf = TreeNode(state[1])
+                leaf.prev_move = state[0]
+                node.add_child(leaf)
+                stack.append(leaf)
+    return None
+
+```
+
 #### BFS
 ```python
 def BFS(game: Game):
@@ -315,28 +334,32 @@ def BFS(game: Game):
     return None
 ```
 
-#### DFS
+#### Heuristic
+In this project, we chose to use two different heuristics, both of which take advantage of the Manhattan distance.
+The first depends solely and exclusively on this distance, prioritising the atoms that are closest to the molecule containing the pivot piece.
+The second prioritises the distance between the molecule and the nearest atom with the greatest number of available electrons.
 ```python
-ef DFS(game: Game):
-    visited = []
-    root = TreeNode(GameState(game.pieces, game.arena))
-    stack = [root]
+def manhattanDistance(piece1, piece2):
+    return abs(piece1.position[0] - piece2.position[0]) + abs(piece1.position[1] - piece2.position[1])
 
-    while stack:
-        node = stack.pop()  
-        node.treeDepth()
-        if node.state.check_win():
-            return node
-        
-        if node not in visited:
-            visited.append(node)
-            for state in node.state.childrenStates():
-                leaf = TreeNode(state[1])
-                leaf.prev_move = state[0]
-                node.add_child(leaf)
-                stack.append(leaf)
-    return None
+# This function will return the sum of minimum distance between the molecule and the nearst atom
+def heuristic1(pieces):
+    totalDistance = 0
+    for index, piece in enumerate(pieces):
+        if index == 0 or len(piece.connections) > 0:
+            continue
+        dist = manhattanDistance(pieces[0], piece)
+        totalDistance += dist
+    return totalDistance
 
+# This function will return the sum of minimum distance between the molecule and the nearst atom with highest number of available electrons
+def heuristic2(pieces):
+    totalDistance = 0
+    for index, piece in enumerate(pieces):
+        if index == 0 or len(piece.connections) > 0:
+            continue
+        totalDistance += manhattanDistance(pieces[0], piece) * (piece.avElectrons + 1)
+    return totalDistance
 ```
 
 #### GREEDY
