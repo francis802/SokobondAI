@@ -6,6 +6,8 @@ import copy
 valenceElectrons = {"H":1,"O":2,"N":3,"C":4}
 atoms = ("H","O","N","C")
 
+
+# ----------------- MAIN ENTITIES -----------------
 class Piece:
 
     def __init__(self, atom, position, avElectrons):
@@ -15,7 +17,7 @@ class Piece:
             self.connections = []
             self.visited = False
             
-    
+# Keep the game board information   
 class Arena:
     def __init__(self, level):
         self.board = level["board"]
@@ -31,12 +33,14 @@ class Arena:
                     walls.append((rindex, colindex))
         return walls
 
+# Keep the game information
 class Game:
     def __init__(self, arena: Arena):
         self.arena = arena
         self.pieces = self.listPieces()
         self.Connections()
 
+# Initiaçize all pieces in the game
     def listPieces(self):
         pieces = []
         for rowIndex, row in enumerate(self.arena.board):
@@ -49,7 +53,7 @@ class Game:
                         pieces.insert(0, piece)
         return pieces
 
-
+# Create the connections between the atoms
     def Connections(self):
         for i in range(len(self.pieces)):
             for j in range(i+1, len(self.pieces)):
@@ -61,7 +65,8 @@ class Game:
                         self.pieces[j].avElectrons -= 1
                 
 
-
+# ----------------- SEARCH ALGORITHM ENTITIES -----------------
+# Keep the game state information
 class GameState:
     def __init__(self, pieces, arena):
         self.pieces = pieces
@@ -129,7 +134,7 @@ class GameState:
     def check_win(self):
         return controller.endGame(self.pieces)
     
-
+# Keep the tree node information to be used in the search algorithm helping to have a tree structure
 class TreeNode:
     def __init__(self, state, prev_move=None, parent=None, heuristicVal=0):
         self.state = state

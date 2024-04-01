@@ -27,26 +27,28 @@ COLORS = {
     None: white
 } 
 
-# Declaração das variáveis globais
+# Global variables
 screen = None
 game_name = "SOKOBOND"
 game_name_font = None
 menu_options_font = None
 symbol_font = None
 
+
+# Initialize the screen and fonts
 def init():
-    # Declarando as variáveis globais dentro da função
     global screen
     global game_name_font
     global menu_options_font
     global symbol_font
 
-    # Definindo os valores das variáveis
     screen = pygame.display.set_mode((1280, 720))
     game_name_font = pygame.font.SysFont("Arial", 100)
     menu_options_font = pygame.font.SysFont("Arial", 24)
     symbol_font = pygame.font.SysFont("Arial", 50)
 
+
+# Display main function
 def display(game, menu_options, menu_option_selected, game_started, level_option, level_option_selected, level_menu, menu_ia, menu_ia_selected, menu_ia_options, algorithm_menu, algorithm_options, algorithm_selected, about, victory, time_elapsed, number_moves, heuristics_selected, heuristics_menu):
     screen.fill("grey")
     
@@ -70,6 +72,7 @@ def display(game, menu_options, menu_option_selected, game_started, level_option
     pygame.display.flip()
 
 
+# Draw the main menu
 def drawMenu(menu_options, menu_option_selected):
     # Draw the game name
     game_name_surface = game_name_font.render(game_name, True, "black")
@@ -81,17 +84,15 @@ def drawMenu(menu_options, menu_option_selected):
         option = menu_options_font.render(option, True, "black")
         highlighted = option.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 + i * 50))
         if i == menu_option_selected:
-            pygame.draw.rect(screen, "orange", highlighted.inflate(20, 10))  # The rectangle shows in the option selected
+            pygame.draw.rect(screen, "orange", highlighted.inflate(20, 10)) 
         screen.blit(option, highlighted)
     
         
-
+# Draw the game state
 def drawGame(game):
-       # Calcula o tamanho do tabuleiro com base nas dimensões do tabuleiro e na proporção do tamanho dos quadrados
     board_width = len(game.arena.board[0]) * SQUARE_SIZE
     board_height = len(game.arena.board) * SQUARE_SIZE
 
-    # Calcula o deslocamento necessário para centralizar o tabuleiro
     horizontal_offset = (screen.get_width() - board_width) // 2
     vertical_offset = (screen.get_height() - board_height) // 2
 
@@ -112,7 +113,7 @@ def drawGame(game):
         if i == 0:
             for angle in range(0, 360, 15):
                 start_angle = math.radians(angle)
-                end_angle = math.radians(angle + 10)  # 10 degrees arc, 5 degrees gap
+                end_angle = math.radians(angle + 10)
                 pygame.draw.arc(screen, black, (piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2 + horizontal_offset - PIECE_SIZE, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2 + vertical_offset - PIECE_SIZE, 2 * PIECE_SIZE, 2 * PIECE_SIZE), start_angle, end_angle, 4)
         else:
             pygame.draw.circle(screen, black, (piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2 + horizontal_offset, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2 + vertical_offset), PIECE_SIZE, 5)
@@ -120,13 +121,11 @@ def drawGame(game):
         text_rect = text_surface.get_rect(center=(piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2 + horizontal_offset, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2 + vertical_offset))
         screen.blit(text_surface, text_rect)
 
-        # Desenha avElectrons:
+        # Draw the electrons available for the piece
         for electrons in range(piece.avElectrons):
             angle = (360 / piece.avElectrons) * electrons
-            # Calcula a posição relativa do elétron de valência em relação ao átomo
             relative_x = int(pygame.math.Vector2(35, 0).rotate(angle).x)
             relative_y = int(pygame.math.Vector2(35, 0).rotate(angle).y)
-            # Calcula a posição absoluta do elétron de valência em relação à tela
             x = piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2 + relative_x + horizontal_offset
             y = piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2 + relative_y + vertical_offset
             pygame.draw.circle(screen, white, (x , y), ELECTRON_SIZE)
@@ -148,47 +147,43 @@ def drawMenuLevels(level_option, level_option_selected):
         text_pos = text_surface.get_rect(midtop=((2 * i + 1) * screen.get_width() // (len(difficulties) * 2), 350))
         screen.blit(text_surface, text_pos)
             
-    # Draw levels 1, 2, and 3 under the "Easy" column
+    # Draw easy levels
     for i, option in enumerate(level_option[1:4]):
         option_surface = menu_options_font.render(option, True, (0, 0, 0))
         easy_text_rect = text_surface.get_rect(midtop=((2 * difficulties.index("Easy") + 1) * screen.get_width() // (len(difficulties) * 2), 350))
-        option_pos = option_surface.get_rect(midtop=(easy_text_rect.centerx, easy_text_rect.bottom + 50 + i * (option_surface.get_height() + 15)))  # Adjust the value 10 for spacing
+        option_pos = option_surface.get_rect(midtop=(easy_text_rect.centerx, easy_text_rect.bottom + 50 + i * (option_surface.get_height() + 15)))
         screen.blit(option_surface, option_pos)
         if i + 1 == level_option_selected:
             pygame.draw.rect(screen, "orange", option_pos.inflate(20, 10))
             screen.blit(option_surface, option_pos)
-            
-    # Draw levels 4, 5, and 6 under the "Medium" column
+
+    # Draw medium levels  
     for i, option in enumerate(level_option[4:7]):
         option_surface = menu_options_font.render(option, True, (0, 0, 0))
         medium_text_rect = text_surface.get_rect(midtop=((2 * difficulties.index("Medium") + 1) * screen.get_width() // (len(difficulties) * 2), 350))
-        option_pos = option_surface.get_rect(midtop=(medium_text_rect.centerx, medium_text_rect.bottom + 50 + i * (option_surface.get_height() + 15)))  # Adjust the value 15 for spacing
+        option_pos = option_surface.get_rect(midtop=(medium_text_rect.centerx, medium_text_rect.bottom + 50 + i * (option_surface.get_height() + 15)))
         screen.blit(option_surface, option_pos)
-        # Highlight the selected option
         if i + 4 == level_option_selected:
             pygame.draw.rect(screen, "orange", option_pos.inflate(20, 10))
             screen.blit(option_surface, option_pos)
 
-            
-    # Draw levels 7 and 8 under the "Hard" column
+    # Draw hard levels
     for i, option in enumerate(level_option[7:9]):
         option_surface = menu_options_font.render(option, True, (0, 0, 0))
         hard_text_rect = text_surface.get_rect(midtop=((2 * difficulties.index("Hard") + 1) * screen.get_width() // (len(difficulties) * 2), 350))
-        option_pos = option_surface.get_rect(midtop=(hard_text_rect.centerx, hard_text_rect.bottom + 50 + i * (option_surface.get_height() + 15)))  # Adjust the value 15 for spacing
+        option_pos = option_surface.get_rect(midtop=(hard_text_rect.centerx, hard_text_rect.bottom + 50 + i * (option_surface.get_height() + 15)))
         screen.blit(option_surface, option_pos)
-        # Highlight the selected option
-        if i + 7 == level_option_selected:  # Adjusted index to match level_option index
+        if i + 7 == level_option_selected:
             pygame.draw.rect(screen, "orange", option_pos.inflate(20, 10))
             screen.blit(option_surface, option_pos)
 
-    # Draw levels 9 and 10 under the "Very Hard" column
-    for i, option in enumerate(level_option[9:11]):  # Adjusted to include level 10
+    # Draw very hard levels
+    for i, option in enumerate(level_option[9:11]):
         option_surface = menu_options_font.render(option, True, (0, 0, 0))
         very_hard_text_rect = text_surface.get_rect(midtop=((2 * difficulties.index("Very Hard") + 1) * screen.get_width() // (len(difficulties) * 2), 350))
-        option_pos = option_surface.get_rect(midtop=(very_hard_text_rect.centerx, very_hard_text_rect.bottom + 50 + i * (option_surface.get_height() + 15)))  # Adjust the value 15 for spacing
+        option_pos = option_surface.get_rect(midtop=(very_hard_text_rect.centerx, very_hard_text_rect.bottom + 50 + i * (option_surface.get_height() + 15)))
         screen.blit(option_surface, option_pos)
-        # Highlight the selected option
-        if i + 9 == level_option_selected:  # Adjusted index to match level_option index
+        if i + 9 == level_option_selected:
             pygame.draw.rect(screen, "orange", option_pos.inflate(20, 10))
             screen.blit(option_surface, option_pos)
 
@@ -197,7 +192,7 @@ def drawMenuLevels(level_option, level_option_selected):
             
             
             
-#Menu to select how to play 
+# Menu to select how to play 
 def drawMenuIA(menu_ia_options, menu_ia_selected):
     # Draw the game name
     game_name_surface = game_name_font.render(game_name, True, "black")
@@ -213,7 +208,7 @@ def drawMenuIA(menu_ia_options, menu_ia_selected):
         screen.blit(option, highlighted)
         
         
-#Menu to select how to play 
+# Menu to select how to play 
 def drawoptionsIA(algorithm_options, algorithm_selected):
     # Draw the game name
     game_name_surface = game_name_font.render(game_name, True, "black")
@@ -231,27 +226,21 @@ def drawoptionsIA(algorithm_options, algorithm_selected):
 
 def drawVictory(number_moves, time_elapsed):
     screen.fill("grey")
-
-    # Create different font objects
     victory_font = pygame.font.SysFont("Arial", 70)
     info_font = pygame.font.SysFont("Arial", 40)
 
-    # Render the victory text
     victory_text = victory_font.render("Victory!", True, "black")
     victory_text_rect = victory_text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2 - 100))
     screen.blit(victory_text, victory_text_rect)
 
-    # Render the number of moves
     moves_text = info_font.render(f"Number of moves: {number_moves}", True, "black")
     moves_text_rect = moves_text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2))
     screen.blit(moves_text, moves_text_rect)
 
-    # Render the time elapsed
     time_text = info_font.render(f"Time elapsed: {time_elapsed:.3f} seconds", True, "black")
     time_text_rect = time_text.get_rect(center=(screen.get_width() // 2, screen.get_height() // 2 + 100))
     screen.blit(time_text, time_text_rect)
 
-    # Render the return button
     button_font = pygame.font.SysFont("Arial", 30)
     button_text = button_font.render("Enter to return", True, "black")
     button_rect = button_text.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 + 4 * 50))
@@ -306,7 +295,6 @@ def drawAbout():
 
 
 def displayLoading():
-
     button_font = pygame.font.SysFont("Arial", 30)
     button_text = button_font.render("Loading...", True, "black")
     button_rect = button_text.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 - 30))
