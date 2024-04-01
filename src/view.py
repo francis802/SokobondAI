@@ -24,30 +24,49 @@ COLORS = {
     'y': yellow,
     'g': grey,
     None: white
-}
+} 
 
+# Declaração das variáveis globais
+screen = None
+game_name = "SOKOBOND"
+game_name_font = None
+menu_options_font = None
+symbol_font = None
 
-def display(screen, game, game_name, symbol_font, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started, level_option, level_option_selected, level_menu, menu_ia, menu_ia_selected, menu_ia_options, algorithm_menu, algorithm_options, algorithm_selected, about):
+def init():
+    # Declarando as variáveis globais dentro da função
+    global screen
+    global game_name_font
+    global menu_options_font
+    global symbol_font
+
+    # Definindo os valores das variáveis
+    screen = pygame.display.set_mode((1280, 720))
+    game_name_font = pygame.font.SysFont("Arial", 100)
+    menu_options_font = pygame.font.SysFont("Arial", 24)
+    symbol_font = pygame.font.SysFont("Arial", 50)
+
+def display(game, menu_options, menu_option_selected, game_started, level_option, level_option_selected, level_menu, menu_ia, menu_ia_selected, menu_ia_options, algorithm_menu, algorithm_options, algorithm_selected, about):
     screen.fill("grey")
     
     if not game_started and not level_menu and not menu_ia and not algorithm_menu: 
-        drawMenu(screen, game_name, game_name_font, menu_options, menu_options_font, menu_option_selected)
+        drawMenu(menu_options, menu_option_selected)
     elif level_menu:
-        drawMenuLevels(screen, game_name, game_name_font, level_option, menu_options_font, level_option_selected)
+        drawMenuLevels(level_option, level_option_selected)
     elif menu_ia:
-        drawMenuIA(screen, game_name, game_name_font, menu_ia_options, menu_options_font, menu_ia_selected)
+        drawMenuIA(menu_ia_options, menu_ia_selected)
     elif algorithm_menu:
-        drawoptionsIA(screen, game_name, game_name_font, algorithm_options, menu_options_font, algorithm_selected)
+        drawoptionsIA(algorithm_options, algorithm_selected)
     elif game_started:
-        drawGame(screen, game, symbol_font)
+        drawGame(game)
 
     if about:
-        drawAbout(screen, game_name, game_name_font)
+        drawAbout()
 
     pygame.display.flip()
 
 
-def drawMenu(screen, game_name, game_name_font, menu_options, menu_options_font, menu_option_selected):
+def drawMenu(menu_options, menu_option_selected):
     # Draw the game name
     game_name_surface = game_name_font.render(game_name, True, "black")
     game_name_pos = game_name_surface.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 - 200))
@@ -63,40 +82,47 @@ def drawMenu(screen, game_name, game_name_font, menu_options, menu_options_font,
     
         
 
-def drawGame(screen, game, symbol_font):
-        
-        for wall in game.arena.walls:
-            pygame.draw.rect(screen, grey, (wall[1] * SQUARE_SIZE, wall[0] * SQUARE_SIZE, SQUARE_SIZE, SQUARE_SIZE))
-        
-        for cut_piece in game.arena.cut_pieces:
-            pygame.draw.circle(screen, red, (cut_piece[1] * SQUARE_SIZE, cut_piece[0] * SQUARE_SIZE), CUT_PIECE_SIZE)
-            pygame.draw.line(screen, black, (cut_piece[1] * SQUARE_SIZE - 5, cut_piece[0] * SQUARE_SIZE), (cut_piece[1] * SQUARE_SIZE + 5, cut_piece[0] * SQUARE_SIZE), 2)
+def drawGame(game):
+       # Calcula o tamanho do tabuleiro com base nas dimensões do tabuleiro e na proporção do tamanho dos quadrados
+    board_width = len(game.arena.board[0]) * SQUARE_SIZE
+    board_height = len(game.arena.board) * SQUARE_SIZE
 
-        for piece in game.pieces:
-            for connection in piece.connections:
-                pygame.draw.line(screen, (0,0,0), (piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2), (connection.position[1] * SQUARE_SIZE + SQUARE_SIZE/2, connection.position[0] * SQUARE_SIZE + SQUARE_SIZE/2), 5)
-        for piece in game.pieces:
-            # Draw the piece:
-                pygame.draw.circle(screen, COLORS[piece.atom], (piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2), PIECE_SIZE)
-                pygame.draw.circle(screen, black, (piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2), PIECE_SIZE, 5)
-                text_surface = symbol_font.render(piece.atom, True, (0,0,0))
-                text_rect = text_surface.get_rect(center=(piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2))
-                screen.blit(text_surface, text_rect)
+    # Calcula o deslocamento necessário para centralizar o tabuleiro
+    horizontal_offset = (screen.get_width() - board_width) // 2
+    vertical_offset = (screen.get_height() - board_height) // 2
 
-            # Draw avElectrons:
-                for electrons in range(piece.avElectrons):
-                    angle = (360 / piece.avElectrons) * electrons
-                    # Calcular a posição relativa do elétron de valência em relação ao átomo
-                    relative_x = int(pygame.math.Vector2(35, 0).rotate(angle).x)
-                    relative_y = int(pygame.math.Vector2(35, 0).rotate(angle).y)
-                    # Calcular a posição absoluta do elétron de valência em relação à tela
-                    x = piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2 + relative_x
-                    y = piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2 + relative_y
-                    pygame.draw.circle(screen, white, (x , y), ELECTRON_SIZE)
-                    pygame.draw.circle(screen, (0,0,0), (x, y), ELECTRON_SIZE, 5)
+    for wall in game.arena.walls:
+        pygame.draw.rect(screen, grey, (wall[1] * SQUARE_SIZE + horizontal_offset, wall[0] * SQUARE_SIZE + vertical_offset, SQUARE_SIZE, SQUARE_SIZE))
+
+    for cut_piece in game.arena.cut_pieces:
+        pygame.draw.circle(screen, red, (cut_piece[1] * SQUARE_SIZE + horizontal_offset, cut_piece[0] * SQUARE_SIZE + vertical_offset), CUT_PIECE_SIZE)
+        pygame.draw.line(screen, black, (cut_piece[1] * SQUARE_SIZE - 5 + horizontal_offset, cut_piece[0] * SQUARE_SIZE + vertical_offset), (cut_piece[1] * SQUARE_SIZE + 5 + horizontal_offset, cut_piece[0] * SQUARE_SIZE + vertical_offset), 2)
+
+    for piece in game.pieces:
+        for connection in piece.connections:
+            pygame.draw.line(screen, (0,0,0), (piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2 + horizontal_offset, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2 + vertical_offset), (connection.position[1] * SQUARE_SIZE + SQUARE_SIZE/2 + horizontal_offset, connection.position[0] * SQUARE_SIZE + SQUARE_SIZE/2 + vertical_offset), 5)
+    for piece in game.pieces:
+        # Desenha a peça:
+        pygame.draw.circle(screen, COLORS[piece.atom], (piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2 + horizontal_offset, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2 + vertical_offset), PIECE_SIZE)
+        pygame.draw.circle(screen, black, (piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2 + horizontal_offset, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2 + vertical_offset), PIECE_SIZE, 5)
+        text_surface = symbol_font.render(piece.atom, True, (0,0,0))
+        text_rect = text_surface.get_rect(center=(piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2 + horizontal_offset, piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2 + vertical_offset))
+        screen.blit(text_surface, text_rect)
+
+        # Desenha avElectrons:
+        for electrons in range(piece.avElectrons):
+            angle = (360 / piece.avElectrons) * electrons
+            # Calcula a posição relativa do elétron de valência em relação ao átomo
+            relative_x = int(pygame.math.Vector2(35, 0).rotate(angle).x)
+            relative_y = int(pygame.math.Vector2(35, 0).rotate(angle).y)
+            # Calcula a posição absoluta do elétron de valência em relação à tela
+            x = piece.position[1] * SQUARE_SIZE + SQUARE_SIZE/2 + relative_x + horizontal_offset
+            y = piece.position[0] * SQUARE_SIZE + SQUARE_SIZE/2 + relative_y + vertical_offset
+            pygame.draw.circle(screen, white, (x , y), ELECTRON_SIZE)
+            pygame.draw.circle(screen, (0,0,0), (x, y), ELECTRON_SIZE, 5)
             
 # Menu to select the level
-def drawMenuLevels(screen, game_name, game_name_font, level_option, menu_options_font, level_option_selected):
+def drawMenuLevels(level_option, level_option_selected):
     # Draw the level selection name
     game_name = "Level Selection"
     game_name_surface = game_name_font.render(game_name, True, "black")
@@ -161,7 +187,7 @@ def drawMenuLevels(screen, game_name, game_name_font, level_option, menu_options
             
             
 #Menu to select how to play 
-def drawMenuIA(screen, game_name, game_name_font, menu_ia_options, menu_options_font, menu_ia_selected):
+def drawMenuIA(menu_ia_options, menu_ia_selected):
     # Draw the game name
     game_name_surface = game_name_font.render(game_name, True, "black")
     game_name_pos = game_name_surface.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 - 200))
@@ -177,7 +203,7 @@ def drawMenuIA(screen, game_name, game_name_font, menu_ia_options, menu_options_
         
         
 #Menu to select how to play 
-def drawoptionsIA(screen, game_name, game_name_font, algorithm_options, menu_options_font, algorithm_selected):
+def drawoptionsIA(algorithm_options, algorithm_selected):
     # Draw the game name
     game_name_surface = game_name_font.render(game_name, True, "black")
     game_name_pos = game_name_surface.get_rect(midtop=(screen.get_width() // 2, screen.get_height() // 2 - 200))
@@ -192,7 +218,7 @@ def drawoptionsIA(screen, game_name, game_name_font, algorithm_options, menu_opt
         screen.blit(option, highlighted)
 
 
-def drawVictory(screen, number_moves, time_elapsed):
+def drawVictory(number_moves, time_elapsed):
     screen.fill("grey")
     font = pygame.font.SysFont("Arial", 50)
 
@@ -215,7 +241,7 @@ def drawVictory(screen, number_moves, time_elapsed):
 
 
 
-def drawAbout(screen, game_name, game_name_font):
+def drawAbout():
     screen.fill("grey")
 
     # Draw the game name
@@ -233,7 +259,7 @@ def drawAbout(screen, game_name, game_name_font):
     command_text = (
     "Commands:"
     "  w - up      z - undo"
-    "  s - down    q - restart"
+    "  s - down    r - restart"
     "  a - left"
     "  d - right"
     )

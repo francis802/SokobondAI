@@ -11,18 +11,10 @@ import time
 
 # pygame setup
 pygame.init()
-screen = pygame.display.set_mode((1280, 720))
+view.init()
 clock = pygame.time.Clock()
 running = True
 dt = 0
-
-# Game Name
-game_name = "SOKOBOND"
-
-# Fonts
-game_name_font = pygame.font.SysFont("Arial", 100)
-menu_options_font = pygame.font.SysFont("Arial", 24)
-symbol_font = pygame.font.SysFont("Arial", 50)
 
 # The options in the menu
 menu_options = ["start game", "about", "quit"]
@@ -83,16 +75,6 @@ def initializeVariables():
     total_moves = 0
     time_start = 0
 
-def printMove():
-    print("Moves: [")
-    for move in prev_states:
-        lista = [(piece.connections.copy(), piece.position) for piece in move.pieces]
-        print(",  ", lista)
-    print("]")
-
-def printAI(pieces):
-    lista = [piece.position for piece in pieces]
-    print(lista)
 
 def getMoves(state):
     moves = []
@@ -200,7 +182,7 @@ while running:
                             game.pieces = last_state
 
     # VIEW: display the game
-    view.display(screen, game, game_name, symbol_font, game_name_font, menu_options, menu_options_font, menu_option_selected, game_started, level_option, level_option_selected, level_menu, menu_ia, menu_ia_selected, menu_ia_options, algorithm_menu, algorithm_options, algorithm_selected, about)
+    view.display(game, menu_options, menu_option_selected, game_started, level_option, level_option_selected, level_menu, menu_ia, menu_ia_selected, menu_ia_options, algorithm_menu, algorithm_options, algorithm_selected, about)
     dt = clock.tick(60) / 1000
 
     # AI LAST MOVE: handle the last move of the AI
@@ -212,7 +194,7 @@ while running:
         if not (menu_ia_selected == 1):
             time_elapsed = time.time() - time_start
             total_moves = len(prev_states)
-        view.drawVictory(screen, total_moves, time_elapsed)  
+        view.drawVictory(total_moves, time_elapsed)  
         pygame.display.flip()
         initializeVariables()
         pygame.time.delay(3000)
